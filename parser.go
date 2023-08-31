@@ -2,27 +2,19 @@ package main
 
 import (
 	"bufio"
-	"fmt"
+	"errors"
 	"os"
 	"regexp"
 	"strconv"
 	"strings"
 )
 
-type Person struct {
-	uid                  string
-	nationalityPrimary   string
-	nationalitySecondary string
-	ethnicValue          int
-}
-
-func ParseRtf(path string) []Person {
+func ParseRtf(path string) ([]Person, error) {
 	result := []Person{}
 
 	rtfFile, rtfErr := os.Open(path)
 	if rtfErr != nil {
-		fmt.Println(rtfErr)
-		os.Exit(0)
+		return nil, rtfErr
 	}
 	defer rtfFile.Close()
 
@@ -34,11 +26,13 @@ func ParseRtf(path string) []Person {
 		uid := UIDRegex.Find([]byte(rtfLine))
 		if uid != nil {
 			rtfData := strings.Split(rtfLine, "|")
+			if len(rtfData) < 8 {
+				return nil, errors.New("rtf format wrong")
+			}
 
 			ethnicValue, ethniceValueErr := strconv.Atoi(strings.Trim(rtfData[7], " "))
 			if ethniceValueErr != nil {
-				fmt.Println(ethniceValueErr)
-				continue
+				return nil, ethniceValueErr
 			}
 
 			result = append(result, Person{
@@ -51,8 +45,9 @@ func ParseRtf(path string) []Person {
 	}
 
 	if rtfScannerErr := rtfScanner.Err(); rtfScannerErr != nil {
-		fmt.Println(rtfScannerErr)
+		return nil, rtfScannerErr
 	}
 
-	return result
+	return result, nil
+}
 }

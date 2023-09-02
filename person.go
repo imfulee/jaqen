@@ -12,9 +12,12 @@ type Person struct {
 	ethnicValue          int
 }
 
-func (person Person) GetEthnic() (string, error) {
-	primaryEthnic := NationToEthnic(person.nationalityPrimary)
-	secondaryEthnic := NationToEthnic(person.nationalitySecondary)
+func (person Person) GetEthnic(nationToEthnic map[string]string) (string, error) {
+	primaryEthnic, hasPrimaryEthnic := nationToEthnic[person.nationalityPrimary]
+	if hasPrimaryEthnic == false {
+		return "", errors.New("No primary nationality")
+	}
+	secondaryEthnic, _ := nationToEthnic[person.nationalitySecondary]
 	nationalityEthnics := []string{primaryEthnic, secondaryEthnic}
 
 	containsEthnic := func(ethnic string) bool {

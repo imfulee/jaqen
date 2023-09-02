@@ -16,13 +16,3 @@ const (
 	SpanishMediterranean        string = "SpanMed"
 	YugoslavGreek               string = "YugoGreek"
 )
-
-type iModes struct {
-	Overwrite string
-	Preserve  string
-}
-
-var Modes = iModes{
-	Overwrite: "Overwrite",
-	Preserve:  "Preserve",
-}

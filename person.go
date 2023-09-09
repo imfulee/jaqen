@@ -14,10 +14,10 @@ type Person struct {
 
 func (person Person) GetEthnic(nationToEthnic map[string]string) (string, error) {
 	primaryEthnic, hasPrimaryEthnic := nationToEthnic[person.nationalityPrimary]
-	if hasPrimaryEthnic == false {
-		return "", errors.New("No primary nationality")
+	if !hasPrimaryEthnic {
+		return "", errors.New("no primary nationality")
 	}
-	secondaryEthnic, _ := nationToEthnic[person.nationalitySecondary]
+	secondaryEthnic := nationToEthnic[person.nationalitySecondary]
 	nationalityEthnics := []string{primaryEthnic, secondaryEthnic}
 
 	containsEthnic := func(ethnic string) bool {
@@ -25,7 +25,7 @@ func (person Person) GetEthnic(nationToEthnic map[string]string) (string, error)
 	}
 
 	if person.ethnicValue > 10 {
-		return "", errors.New("Ethnic value out of bounds")
+		return "", errors.New("ethnic value out of bounds")
 	}
 
 	switch person.ethnicValue {
@@ -78,6 +78,6 @@ func (person Person) GetEthnic(nationToEthnic map[string]string) (string, error)
 	case 4:
 		return MiddleEastSouthAmerican, nil
 	default:
-		return "", errors.New("Ethnic not found")
+		return "", errors.New("ethnic not found")
 	}
 }

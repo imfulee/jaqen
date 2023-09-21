@@ -50,4 +50,3 @@ func ParseRtf(path string) ([]Person, error) {
 
 	return result, nil
 }
-}

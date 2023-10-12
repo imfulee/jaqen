@@ -1,0 +1,11 @@
+<record>
+	<boolean id="preload" value="false"/>
+	<boolean id="amap" value="false"/>
+	<list id="maps">
+		<record from="existing/1" to="graphics/pictures/person/1/portrait"/>
+		<record from="existing/1000055" to="graphics/pictures/person/1000055/portrait"/>
+		<record from="existing/100007" to="graphics/pictures/person/100007/portrait"/>
+		<record from="existing/100014" to="graphics/pictures/person/100014/portrait"/>
+		<record from="existing/1000438" to="graphics/pictures/person/1000438/portrait"/>
+	</list>
+</record>

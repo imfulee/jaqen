@@ -1,10 +1,10 @@
 # Jaqen
 
-Just a Football Manager New GAN Manager rewrite in go.
+A Football Manager New GAN Manager rewrite in go. I named it Jaqen based on Jaqen H'ghar having a wall of faces.
 
 ## Motivation
 
-I just wanted to learn go and just found the original didn't run well on Linux.
+I just wanted to learn go and just found the original didn't run well on Linux, as I think the original version works pretty well for Windows and Mac so it's unnecessary to support those architectures.
 
 ## Usage
 

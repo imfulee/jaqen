@@ -247,25 +247,37 @@ var defaultNationEthnicMapping = map[string]string{
 	"SPM": "Caucasian",
 }
 
-func NationToEthnicReader(ethnicJsonPath string) (map[string]string, error) {
+type NationEthnicMapper struct {
+	nationEthnicMap map[string]string
+}
+
+func (neMapper *NationEthnicMapper) Read(ethnicJsonPath string) error {
 	if ethnicJsonPath == "" {
-		return defaultNationEthnicMapping, nil
+		neMapper.nationEthnicMap = defaultNationEthnicMapping
+		return nil
 	}
 
 	jsonFile, jsonFileErr := os.Open(ethnicJsonPath)
 	if jsonFileErr != nil {
-		return nil, jsonFileErr
+		return jsonFileErr
 	}
 	defer jsonFile.Close()
 
 	byteValue, err := io.ReadAll(jsonFile)
 	if err != nil {
-		return nil, errors.Join(errors.New("cannot read all json data"), err)
+		return errors.Join(errors.New("cannot read all json data"), err)
 	}
 	nationToEthnicMap := map[string]string{}
 	if err := json.Unmarshal([]byte(byteValue), &nationToEthnicMap); err != nil {
-		return nil, errors.Join(errors.New("cannot unmarshall json data"), err)
+		return errors.Join(errors.New("cannot unmarshall json data"), err)
 	}
 
-	return nationToEthnicMap, nil
+	neMapper.nationEthnicMap = nationToEthnicMap
+
+	return nil
+}
+
+func (neMapper *NationEthnicMapper) Map(nationality string) (string, bool) {
+	ethnic, hasEthnic := neMapper.nationEthnicMap[nationality]
+	return ethnic, hasEthnic
 }

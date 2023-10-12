@@ -2,81 +2,69 @@ package main
 
 import (
 	"errors"
-	"slices"
 )
 
 type Person struct {
-	uid                  string
-	nationalityPrimary   string
-	nationalitySecondary string
-	ethnicValue          int
+	uid             string
+	ethnicPrimary   string
+	ethnicSecondary string
+	ethnicValue     int
 }
 
-func (person Person) GetEthnic(nationToEthnic map[string]string) (string, error) {
-	primaryEthnic, hasPrimaryEthnic := nationToEthnic[person.nationalityPrimary]
-	if !hasPrimaryEthnic {
-		return "", errors.New("no primary nationality")
-	}
-	secondaryEthnic := nationToEthnic[person.nationalitySecondary]
-	nationalityEthnics := []string{primaryEthnic, secondaryEthnic}
-
-	containsEthnic := func(ethnic string) bool {
-		return slices.Contains(nationalityEthnics, ethnic)
-	}
-
-	if person.ethnicValue > 10 {
-		return "", errors.New("ethnic value out of bounds")
+func (person Person) GetEthnic() (string, error) {
+	hasEthnic := func(ethnic string) bool {
+		return person.ethnicPrimary == ethnic || person.ethnicSecondary == ethnic
 	}
 
 	switch person.ethnicValue {
+	case 0:
+		if hasEthnic(Scandinavian) {
+			return Scandinavian, nil
+		}
+		if hasEthnic(Caucasion) {
+			return Caucasion, nil
+		}
+		return CentralEuropean, nil
 	case 1:
-		if containsEthnic(Scandinavian) ||
-			containsEthnic(SouthEastAsian) ||
-			containsEthnic(CentralEuropean) ||
-			containsEthnic(Caucasion) ||
-			containsEthnic(African) ||
-			containsEthnic(Asian) ||
-			containsEthnic(MiddleEastNorthAfrican) ||
-			containsEthnic(MiddleEastSouthAmerican) ||
-			containsEthnic(EasternEuropeanCentralAsian) {
+		if hasEthnic(Scandinavian) ||
+			hasEthnic(SouthEastAsian) ||
+			hasEthnic(CentralEuropean) ||
+			hasEthnic(Caucasion) ||
+			hasEthnic(African) ||
+			hasEthnic(Asian) ||
+			hasEthnic(MiddleEastNorthAfrican) ||
+			hasEthnic(MiddleEastSouthAmerican) ||
+			hasEthnic(EasternEuropeanCentralAsian) {
 			return SouthAmerican, nil
 		}
-		if primaryEthnic != "" {
-			return primaryEthnic, nil
+		if person.ethnicPrimary != "" {
+			return person.ethnicPrimary, nil
 		}
-		return secondaryEthnic, nil
+		return person.ethnicSecondary, nil
+	case 2:
+		if hasEthnic(MiddleEastSouthAmerican) {
+			return MiddleEastSouthAmerican, nil
+		}
+		return MiddleEastNorthAfrican, nil
 	case 3, 6, 7, 8, 9:
 		if person.ethnicValue == 7 {
-			if primaryEthnic == SouthAmericanMediterranean {
+			if person.ethnicPrimary == SouthAmericanMediterranean {
 				return SouthAmericanMediterranean, nil
 			}
-			if primaryEthnic == SouthAmerican {
+			if person.ethnicPrimary == SouthAmerican {
 				return SouthAmerican, nil
 			}
 		}
 		return African, nil
+	case 4:
+		return MiddleEastSouthAmerican, nil
+	case 5:
+		return SouthEastAsian, nil
 	case 10:
-		if primaryEthnic == SouthAmerican {
+		if person.ethnicPrimary == SouthAmerican {
 			return SouthAmerican, nil
 		}
 		return Asian, nil
-	case 2:
-		if containsEthnic(MiddleEastSouthAmerican) {
-			return MiddleEastSouthAmerican, nil
-		}
-		return MiddleEastNorthAfrican, nil
-	case 5:
-		return SouthEastAsian, nil
-	case 0:
-		if containsEthnic(Scandinavian) {
-			return Scandinavian, nil
-		}
-		if containsEthnic(Caucasion) {
-			return Caucasion, nil
-		}
-		return CentralEuropean, nil
-	case 4:
-		return MiddleEastSouthAmerican, nil
 	default:
 		return "", errors.New("ethnic not found")
 	}

@@ -3,13 +3,24 @@ package main
 import (
 	"bufio"
 	"errors"
+	"fmt"
 	"os"
 	"regexp"
 	"strconv"
 	"strings"
 )
 
-func ParseRtf(path string) ([]Person, error) {
+var ErrBadRTFFormat error = errors.New("bad RTF Format")
+
+type INationEthnicMapper interface {
+	Map(string) (string, bool)
+}
+
+type RTF struct {
+	nationEthnicMapper INationEthnicMapper
+}
+
+func (r RTF) Parse(path string) ([]Person, error) {
 	result := []Person{}
 
 	rtfFile, rtfErr := os.Open(path)
@@ -18,16 +29,21 @@ func ParseRtf(path string) ([]Person, error) {
 	}
 	defer rtfFile.Close()
 
-	UIDRegex := regexp.MustCompile("([0-9]){7,}")
+	UIDRegex, err := regexp.Compile("([0-9]){7,}")
+	if err != nil {
+		return nil, err
+	}
 
 	rtfScanner := bufio.NewScanner(rtfFile)
 	for rtfScanner.Scan() {
 		rtfLine := rtfScanner.Text()
-		uid := UIDRegex.Find([]byte(rtfLine))
-		if uid != nil {
+		uidByte := UIDRegex.Find([]byte(rtfLine))
+		if uidByte != nil {
+			uid := string(uidByte)
+
 			rtfData := strings.Split(rtfLine, "|")
 			if len(rtfData) < 8 {
-				return nil, errors.New("rtf format wrong")
+				return nil, errors.Join(ErrBadRTFFormat, errors.New("not enough lines in RTF line"))
 			}
 
 			ethnicValue, ethniceValueErr := strconv.Atoi(strings.Trim(rtfData[7], " "))
@@ -35,11 +51,22 @@ func ParseRtf(path string) ([]Person, error) {
 				return nil, ethniceValueErr
 			}
 
+			if ethnicValue > 10 {
+				return nil, errors.Join(ErrBadRTFFormat, errors.New("ethnic value out of bounds"))
+			}
+
+			ethnicPrimary, hasEthnic := r.nationEthnicMapper.Map(strings.Trim(rtfData[2], " "))
+			if !hasEthnic {
+				return nil, errors.Join(ErrBadRTFFormat, fmt.Errorf("does not have ethnic on id %s", uid))
+			}
+
+			ethnicSecondary, _ := r.nationEthnicMapper.Map(strings.Trim(rtfData[3], " "))
+
 			result = append(result, Person{
-				uid:                  string(uid),
-				nationalityPrimary:   strings.Trim(rtfData[2], " "),
-				nationalitySecondary: strings.Trim(rtfData[3], " "),
-				ethnicValue:          ethnicValue,
+				uid:             uid,
+				ethnicPrimary:   ethnicPrimary,
+				ethnicSecondary: ethnicSecondary,
+				ethnicValue:     ethnicValue,
 			})
 		}
 	}

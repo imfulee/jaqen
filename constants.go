@@ -1,18 +1,20 @@
 package main
 
+type Ethnic = string
+
 const (
-	African                     string = "African"
-	Asian                       string = "Asian"
-	Caucasion                   string = "Caucasion"
-	CentralEuropean             string = "CentralEuropean"
-	EasternEuropeanCentralAsian string = "EECA"
-	ItalianMediterranean        string = "ItaMed"
-	MiddleEastNorthAfrican      string = "MENA"
-	MiddleEastSouthAmerican     string = "MESA"
-	SouthAmericanMediterranean  string = "SAMed"
-	Scandinavian                string = "Scandinavian"
-	SouthEastAsian              string = "Seasian"
-	SouthAmerican               string = "SouthAmerican"
-	SpanishMediterranean        string = "SpanMed"
-	YugoslavGreek               string = "YugoGreek"
+	African                     Ethnic = "African"
+	Asian                       Ethnic = "Asian"
+	Caucasion                   Ethnic = "Caucasion"
+	CentralEuropean             Ethnic = "CentralEuropean"
+	EasternEuropeanCentralAsian Ethnic = "EECA"
+	ItalianMediterranean        Ethnic = "ItaMed"
+	MiddleEastNorthAfrican      Ethnic = "MENA"
+	MiddleEastSouthAmerican     Ethnic = "MESA"
+	SouthAmericanMediterranean  Ethnic = "SAMed"
+	Scandinavian                Ethnic = "Scandinavian"
+	SouthEastAsian              Ethnic = "Seasian"
+	SouthAmerican               Ethnic = "SouthAmerican"
+	SpanishMediterranean        Ethnic = "SpanMed"
+	YugoslavGreek               Ethnic = "YugoGreek"
 )

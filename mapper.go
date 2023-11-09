@@ -7,7 +7,7 @@ import (
 	"os"
 	"regexp"
 
-	mapset "github.com/deckarep/golang-set"
+	mapset "github.com/deckarep/golang-set/v2"
 )
 
 type PersonMap struct {

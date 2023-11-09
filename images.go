@@ -6,84 +6,106 @@ import (
 	"math/rand"
 	"os"
 	"path"
-	"slices"
+	"path/filepath"
+
+	mapset "github.com/deckarep/golang-set/v2"
 )
 
-type Images struct {
-	unusedPool map[string][]string // images that are unused
-	imagePool  map[string][]string // images in folders
+func removeImageSuffix(filename string) string {
+	fileExtension := filepath.Ext(filename)
+	if fileExtension != "png" {
+		return ""
+	}
+
+	return filename[:len(filename)-len(fileExtension)]
 }
 
-func (imgs *Images) CreatePool(rootPath string, usedImages map[string][]string) error {
-	// finding all the images in the rootPath
-	rootFolder, rootFolderError := os.Open(rootPath)
-	if rootFolderError != nil {
-		return fmt.Errorf("cannot access root path: %w", rootFolderError)
-	}
-	defer rootFolder.Close()
+type Images struct {
+	imagePool map[string][]string // images in folders
+}
 
-	subFolders, subFoldersError := rootFolder.ReadDir(-1)
-	if subFoldersError != nil {
-		return fmt.Errorf("cannot read directory: %w", subFoldersError)
+func (imgs *Images) Init(imageFolderPath string, perserve bool, exclude map[Ethnic][]string) error {
+	if perserve && exclude == nil {
+		return errors.New("if preseve mode is on, exclude map should be given")
 	}
 
-	for _, subFolder := range subFolders {
-		if !subFolder.IsDir() {
-			continue
+	if imageFolderPath == "" {
+		return errors.New("no image folder root path")
+	}
+
+	var excludeSets map[Ethnic]mapset.Set[string]
+	for ethnic, excludedImages := range exclude {
+		ethnicExcludedSet := mapset.NewSet[string]()
+
+		for _, excludedImage := range excludedImages {
+			ethnicExcludedSet.Add(excludedImage)
 		}
 
-		subFName := subFolder.Name()
+		excludeSets[ethnic] = ethnicExcludedSet
+	}
 
-		subfolderRoot, subfolderRootError := os.Open(path.Join(rootPath, subFName))
-		if subfolderRootError != nil {
-			return subfolderRootError
+	ethnicities := [...]Ethnic{
+		African,
+		Asian,
+		Caucasion,
+		CentralEuropean,
+		EasternEuropeanCentralAsian,
+		ItalianMediterranean,
+		MiddleEastNorthAfrican,
+		MiddleEastSouthAmerican,
+		SouthAmericanMediterranean,
+		Scandinavian,
+		SouthEastAsian,
+		SouthAmerican,
+		SpanishMediterranean,
+		YugoslavGreek,
+	}
+
+	var imagePool map[Ethnic]mapset.Set[string]
+	for _, ethnic := range ethnicities {
+		if _, ok := imagePool[ethnic]; !ok {
+			imagePool[ethnic] = mapset.NewSet[string]()
 		}
-		defer subfolderRoot.Close()
 
-		subFolderFiles, subFolderFilesError := subfolderRoot.ReadDir(-1)
-		if subFolderFilesError != nil {
-			return subFolderFilesError
+		ethnicImageFolderPath := path.Join(imageFolderPath)
+		ethnicImageFiles, error := os.ReadDir(ethnicImageFolderPath)
+		if error != nil {
+			return errors.Join(fmt.Errorf("cannot get ethnic folder %s", ethnicImageFolderPath), error)
 		}
 
-		imgs.imagePool[subFName] = []string{}
-
-		for _, subFolerFile := range subFolderFiles {
-			if subFolerFile.IsDir() {
+		for _, ethnicImageFile := range ethnicImageFiles {
+			if ethnicImageFile.IsDir() {
 				continue
 			}
 
-			imgs.imagePool[subFName] = append(imgs.imagePool[subFName], subFolerFile.Name())
-		}
-	}
-
-	if len(usedImages) > 0 {
-		for ethnicInImagePool := range imgs.imagePool {
-			usedImage, excludeHasSameEthnic := usedImages[ethnicInImagePool]
-			if !excludeHasSameEthnic {
-				return fmt.Errorf("exclude has bad format: ethnic %s is not found", ethnicInImagePool)
+			filename := removeImageSuffix(ethnicImageFile.Name())
+			if filename == "" {
+				continue
 			}
 
-			for _, image := range imgs.imagePool[ethnicInImagePool] {
-				if !slices.Contains(usedImage, image) {
-					if len(imgs.unusedPool[ethnicInImagePool]) == 0 {
-						imgs.unusedPool[ethnicInImagePool] = []string{}
-					}
-
-					imgs.unusedPool[ethnicInImagePool] = append(imgs.unusedPool[ethnicInImagePool], image)
-				}
-			}
+			imagePool[ethnic].Add(filename)
 		}
+
+		if perserve {
+			imagePool[ethnic] = imagePool[ethnic].Difference(excludeSets[ethnic])
+		}
+
+		imgs.imagePool[ethnic] = imagePool[ethnic].ToSlice()
 	}
 
 	return nil
 }
 
-func (imgs *Images) Random(ethnic string, excludeUsed bool) (string, error) {
+func (imgs *Images) Random(ethnic string) (string, error) {
 	if len(imgs.imagePool) == 0 {
 		return "", errors.New("there are no images in image pool")
 	}
 
-	var chosenImage string
+	if _, ok := imgs.imagePool[ethnic]; !ok {
+		return "", errors.New("no images for this ethnic")
+	}
+
+	chosenImage := ""
 
 	// get images from ethnic provided
 	images, hasEthnicInMap := imgs.imagePool[ethnic]
@@ -92,21 +114,6 @@ func (imgs *Images) Random(ethnic string, excludeUsed bool) (string, error) {
 	}
 
 	chosenImage = images[rand.Intn(len(images))]
-
-	// if exclude used then exclude the used images
-	if excludeUsed && len(imgs.unusedPool) > 0 {
-		unusedImages, hasEthnicInMap := imgs.unusedPool[ethnic]
-		if !hasEthnicInMap {
-			return "", fmt.Errorf("no ethnic %s in unused image pool", ethnic)
-		}
-
-		chosenImage = unusedImages[rand.Intn(len(unusedImages))]
-	}
-
-	// remove chosen image from unused pool
-	imgs.unusedPool[ethnic] = slices.DeleteFunc(imgs.unusedPool[ethnic], func(img string) bool {
-		return img == chosenImage
-	})
 
 	return chosenImage, nil
 }

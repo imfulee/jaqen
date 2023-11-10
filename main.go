@@ -15,9 +15,28 @@ func main() {
 	}
 
 	fmImages := mapper.Images{}
-	fmImages.Init("", false, nil)
+	err = fmImages.Init("", false, nil)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(0)
+	}
+
 	fmMapper := mapper.Mapper{Images: &fmImages}
-	fmMapper.ReadXML("")
-	fmMapper.CreateMap(fmPersons)
-	fmMapper.WriteXML("")
+	err = fmMapper.ReadXML("")
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(0)
+	}
+
+	err = fmMapper.CreateMap(fmPersons)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(0)
+	}
+
+	err = fmMapper.WriteXML("")
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(0)
+	}
 }

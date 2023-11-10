@@ -1,4 +1,4 @@
-package main
+package mapper
 
 import (
 	"errors"
@@ -24,6 +24,7 @@ type Images struct {
 	imagePool map[string][]string // images in folders
 }
 
+// `exclude` is a map of ethnic string to images
 func (imgs *Images) Init(imageFolderPath string, perserve bool, exclude map[Ethnic][]string) error {
 	if perserve && exclude == nil {
 		return errors.New("if preseve mode is on, exclude map should be given")
@@ -78,7 +79,7 @@ func (imgs *Images) Init(imageFolderPath string, perserve bool, exclude map[Ethn
 				continue
 			}
 
-			filename := removeImageSuffix(ethnicImageFile.Name())
+			filename := ethnicImageFile.Name()
 			if filename == "" {
 				continue
 			}

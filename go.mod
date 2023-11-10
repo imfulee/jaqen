@@ -1,4 +1,4 @@
-module ngm-go
+module jaqen
 
 go 1.21
 

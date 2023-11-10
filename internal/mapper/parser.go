@@ -2,7 +2,10 @@ package mapper
 
 import (
 	"bufio"
+	"encoding/xml"
 	"errors"
+	"fmt"
+	"io"
 	"os"
 	"regexp"
 	"strconv"
@@ -148,4 +151,94 @@ func (r RTF) Parse(path string) ([]Person, error) {
 	}
 
 	return result, nil
+}
+
+type Record struct {
+	From string `xml:"from,attr"`
+	To   string `xml:"to,attr"`
+}
+
+type XMLStruct struct {
+	XMLName xml.Name `xml:"record"`
+	Boolean []struct {
+		ID    string `xml:"id,attr"`
+		Value string `xml:"value,attr"`
+	} `xml:"boolean"`
+	List struct {
+		ID     string   `xml:"id,attr"`
+		Record []Record `xml:"record"`
+	} `xml:"list"`
+}
+
+type XML struct {
+	data *XMLStruct
+}
+
+func (x *XML) ReadXML(xmlPath string) error {
+	xmlFile, err := os.Open(xmlPath)
+	if err != nil {
+		return errors.Join(errors.New("cannot open xml file"), err)
+	}
+
+	xmlBytes, err := io.ReadAll(xmlFile)
+	if err != nil {
+		return errors.Join(errors.New("cannot read all xml data"), err)
+	}
+	defer xmlFile.Close()
+
+	if err := xml.Unmarshal(xmlBytes, &x.data); err != nil {
+		return errors.Join(errors.New("cannot unmarshall xml file"), err)
+	}
+
+	return nil
+}
+
+func (x *XML) GetPreviousMappings() (map[string]PersonMap, error) {
+	idRegex, err := regexp.Compile(`\d`)
+	if err != nil {
+		return nil, errors.Join(errors.New("cannot compile regex"), err)
+	}
+
+	mappings := make(map[string]PersonMap)
+	for _, record := range x.data.List.Record {
+		pm := PersonMap{
+			FromPath: record.From,
+			ToPath:   record.To,
+		}
+
+		idArray := idRegex.FindStringSubmatch(pm.FromPath)
+		if idArray == nil {
+			return nil, fmt.Errorf("cannot find id for %s", pm.FromPath)
+		}
+		id := idArray[0]
+
+		mappings[id] = pm
+	}
+
+	return mappings, nil
+}
+
+func (x *XML) UpdateMappings(personMaps map[string]PersonMap) {
+	x.data.List.Record = make([]Record, 0)
+
+	for _, personMap := range personMaps {
+		x.data.List.Record = append(x.data.List.Record, Record{
+			From: personMap.FromPath,
+			To:   personMap.ToPath,
+		})
+	}
+}
+
+func (x *XML) WriteXML(xmlPath string) error {
+	xmlString, err := xml.MarshalIndent(&x.data, "  ", "    ")
+	if err != nil {
+		return err
+	}
+
+	err = os.WriteFile(xmlPath, xmlString, 0777)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

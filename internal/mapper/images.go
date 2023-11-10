@@ -6,19 +6,9 @@ import (
 	"math/rand"
 	"os"
 	"path"
-	"path/filepath"
 
 	mapset "github.com/deckarep/golang-set/v2"
 )
-
-func removeImageSuffix(filename string) string {
-	fileExtension := filepath.Ext(filename)
-	if fileExtension != "png" {
-		return ""
-	}
-
-	return filename[:len(filename)-len(fileExtension)]
-}
 
 type Images struct {
 	imagePool map[string][]string // images in folders

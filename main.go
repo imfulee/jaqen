@@ -13,7 +13,9 @@ func main() {
 	XMLPath := ""
 	RTFPath := ""
 
-	rtfParser := mapper.RTF{NationEthnicMapper: &mapper.NationEthnicMapper{}}
+	neMapper := mapper.NationEthnicMapper{}
+	neMapper.Init("")
+	rtfParser := mapper.RTF{NationEthnicMapper: &neMapper}
 	fmPersons, err := rtfParser.Parse(RTFPath)
 	if err != nil {
 		fmt.Println(err)

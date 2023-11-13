@@ -27,7 +27,7 @@ func (imgs *Images) Init(imageFolderPath string, perserve bool, exclude map[Ethn
 	ethnicities := [...]Ethnic{
 		African,
 		Asian,
-		Caucasion,
+		Caucasian,
 		CentralEuropean,
 		EasternEuropeanCentralAsian,
 		ItalianMediterranean,

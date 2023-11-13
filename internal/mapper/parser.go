@@ -44,15 +44,15 @@ func (r RTF) getEthnic(nationality1, nationality2 string, ethnicValue int) (Ethn
 		if hasEthnic(Scandinavian) {
 			return Scandinavian, nil
 		}
-		if hasEthnic(Caucasion) {
-			return Caucasion, nil
+		if hasEthnic(Caucasian) {
+			return Caucasian, nil
 		}
 		return CentralEuropean, nil
 	case 1:
 		if hasEthnic(Scandinavian) ||
 			hasEthnic(SouthEastAsian) ||
 			hasEthnic(CentralEuropean) ||
-			hasEthnic(Caucasion) ||
+			hasEthnic(Caucasian) ||
 			hasEthnic(African) ||
 			hasEthnic(Asian) ||
 			hasEthnic(MiddleEastNorthAfrican) ||

@@ -24,17 +24,6 @@ func (imgs *Images) Init(imageFolderPath string, perserve bool, exclude map[Ethn
 		return errors.New("no image folder root path")
 	}
 
-	excludeSets := make(map[Ethnic]mapset.Set[string])
-	for ethnic, excludedImages := range exclude {
-		ethnicExcludedSet := mapset.NewSet[string]()
-
-		for _, excludedImage := range excludedImages {
-			ethnicExcludedSet.Add(excludedImage)
-		}
-
-		excludeSets[ethnic] = ethnicExcludedSet
-	}
-
 	ethnicities := [...]Ethnic{
 		African,
 		Asian,
@@ -68,6 +57,16 @@ func (imgs *Images) Init(imageFolderPath string, perserve bool, exclude map[Ethn
 
 	imgs.imagePool = make(map[string][]string)
 
+	excludeSets := make(map[Ethnic]mapset.Set[string])
+	for ethnic, excludedImages := range exclude {
+		ethnicExcludedSet := mapset.NewSet[string]()
+
+		for _, excludedImage := range excludedImages {
+			ethnicExcludedSet.Add(excludedImage)
+		}
+
+		excludeSets[ethnic] = ethnicExcludedSet
+	}
 
 	imagePool := make(map[Ethnic]mapset.Set[string])
 	for _, ethnic := range ethnicities {

@@ -134,12 +134,12 @@ func (r RTF) Parse(path string) ([]Person, error) {
 			nationality1 := rtfData[2]
 			nationality2 := rtfData[3]
 
-			ethnic, error := r.getEthnic(nationality1, nationality2, ethnicValue)
-			if error != nil {
+			ethnic, err := r.getEthnic(nationality1, nationality2, ethnicValue)
+			if err != nil {
 				return nil, errors.Join(ErrBadRTFFormat,
 					errors.Join(
 						errors.New("could not find ethnic"),
-						error,
+						err,
 					))
 			}
 

@@ -66,6 +66,8 @@ func (imgs *Images) Init(imageFolderPath string, perserve bool, exclude map[Ethn
 		}
 	}
 
+	imgs.imagePool = make(map[string][]string)
+
 
 	imagePool := make(map[Ethnic]mapset.Set[string])
 	for _, ethnic := range ethnicities {

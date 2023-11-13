@@ -52,6 +52,21 @@ func (imgs *Images) Init(imageFolderPath string, perserve bool, exclude map[Ethn
 		YugoslavGreek,
 	}
 
+	for ethnic := range exclude {
+		found := false
+		for _, allowedEthnic := range ethnicities {
+			if ethnic == allowedEthnic {
+				found = true
+				break
+			}
+		}
+
+		if !found {
+			return errors.New("ethnic not allowed in exclude list")
+		}
+	}
+
+
 	imagePool := make(map[Ethnic]mapset.Set[string])
 	for _, ethnic := range ethnicities {
 		if _, ok := imagePool[ethnic]; !ok {

@@ -74,7 +74,7 @@ func (imgs *Images) Init(imageFolderPath string, perserve bool, exclude map[Ethn
 			imagePool[ethnic] = mapset.NewSet[string]()
 		}
 
-		ethnicImageFolderPath := path.Join(imageFolderPath)
+		ethnicImageFolderPath := path.Join(imageFolderPath, ethnic)
 		ethnicImageFiles, error := os.ReadDir(ethnicImageFolderPath)
 		if error != nil {
 			return errors.Join(fmt.Errorf("cannot get ethnic folder %s", ethnicImageFolderPath), error)

@@ -39,7 +39,7 @@ func main() {
 	for _, mapping := range previousMappings {
 		strs := strings.Split(mapping.FromPath, "/")
 		if len(strs) != 3 {
-			fmt.Println("error")
+			fmt.Println("xml file bad format")
 			os.Exit(0)
 		}
 

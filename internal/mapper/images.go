@@ -122,7 +122,12 @@ func (imgs *Images) Random(ethnic string) (string, error) {
 		return "", fmt.Errorf("no ethnic %s in image pool", ethnic)
 	}
 
-	chosenImage = images[rand.Intn(len(images))]
+	imagePoolLength := len(images)
+	if imagePoolLength == 0 {
+		return "", fmt.Errorf("image pool of ethnic %s has no images", ethnic)
+	}
+
+	chosenImage = images[rand.Intn(imagePoolLength)]
 
 	return chosenImage, nil
 }

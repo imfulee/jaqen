@@ -6,7 +6,7 @@ A Football Manager New GAN Manager rewrite in go. I named it Jaqen based on Jaqe
 
 ## Motivation
 
-I just wanted to learn go and just found the original didn't run well on Linux, as I think the original version works pretty well for Windows and Mac so it's unnecessary to support those architectures.
+I just wanted to learn go and just found the original didn't run well on Linux, as I think the original version works pretty well for Windows and Mac. However, this is just a fun side project for me. Even if I finish this off, I don't intend on supporting it long term, you're very welcomed to submit PRs and Issues but I don't guarantee to fix it.
 
 ## Requirements
 

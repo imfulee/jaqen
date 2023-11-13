@@ -93,8 +93,10 @@ func (imgs *Images) Init(imageFolderPath string, perserve bool, exclude map[Ethn
 			imagePool[ethnic].Add(filename)
 		}
 
-		if perserve {
-			imagePool[ethnic] = imagePool[ethnic].Difference(excludeSets[ethnic])
+		currentPool := imagePool[ethnic]
+		excludePool := excludeSets[ethnic]
+		if perserve && excludePool != nil {
+			imagePool[ethnic] = currentPool.Difference(excludePool)
 		}
 
 		imgs.imagePool[ethnic] = imagePool[ethnic].ToSlice()

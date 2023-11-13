@@ -119,7 +119,11 @@ func (r RTF) Parse(path string) ([]Person, error) {
 				return nil, errors.Join(ErrBadRTFFormat, errors.New("not enough lines in RTF line"))
 			}
 
-			ethnicValue, ethniceValueErr := strconv.Atoi(strings.Trim(rtfData[7], " "))
+			for rtfDataIndex := range rtfData {
+				rtfData[rtfDataIndex] = strings.Trim(rtfData[rtfDataIndex], " ")
+			}
+
+			ethnicValue, ethniceValueErr := strconv.Atoi(rtfData[7])
 			if ethniceValueErr != nil {
 				return nil, ethniceValueErr
 			}
@@ -127,8 +131,8 @@ func (r RTF) Parse(path string) ([]Person, error) {
 				return nil, errors.Join(ErrBadRTFFormat, errors.New("ethnic value out of bounds"))
 			}
 
-			nationality1 := strings.Trim(rtfData[2], " ")
-			nationality2 := strings.Trim(rtfData[3], " ")
+			nationality1 := rtfData[2]
+			nationality2 := rtfData[3]
 
 			ethnic, error := r.getEthnic(nationality1, nationality2, ethnicValue)
 			if error != nil {

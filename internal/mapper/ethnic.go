@@ -251,7 +251,7 @@ type NationEthnicMapper struct {
 	nationEthnicMap map[string]string
 }
 
-func (neMapper *NationEthnicMapper) Read(ethnicJsonPath string) error {
+func (neMapper *NationEthnicMapper) Init(ethnicJsonPath string) error {
 	if ethnicJsonPath == "" {
 		neMapper.nationEthnicMap = defaultNationEthnicMapping
 		return nil

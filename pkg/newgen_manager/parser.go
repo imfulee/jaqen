@@ -178,26 +178,22 @@ type XML struct {
 	data *XMLStruct
 }
 
-func (x *XML) ReadXML(xmlPath string) error {
+func (x *XML) Read(xmlPath string) (map[string]PersonMap, error) {
 	xmlFile, err := os.Open(xmlPath)
 	if err != nil {
-		return errors.Join(errors.New("cannot open xml file"), err)
+		return nil, errors.Join(errors.New("cannot open xml file"), err)
 	}
 
 	xmlBytes, err := io.ReadAll(xmlFile)
 	if err != nil {
-		return errors.Join(errors.New("cannot read all xml data"), err)
+		return nil, errors.Join(errors.New("cannot read all xml data"), err)
 	}
 	defer xmlFile.Close()
 
 	if err := xml.Unmarshal(xmlBytes, &x.data); err != nil {
-		return errors.Join(errors.New("cannot unmarshall xml file"), err)
+		return nil, errors.Join(errors.New("cannot unmarshall xml file"), err)
 	}
 
-	return nil
-}
-
-func (x *XML) GetPreviousMappings() (map[string]PersonMap, error) {
 	idRegex, err := regexp.Compile(`\d`)
 	if err != nil {
 		return nil, errors.Join(errors.New("cannot compile regex"), err)
@@ -222,7 +218,7 @@ func (x *XML) GetPreviousMappings() (map[string]PersonMap, error) {
 	return mappings, nil
 }
 
-func (x *XML) UpdateMappings(personMaps map[string]PersonMap) {
+func (x *XML) Write(xmlPath string, personMaps map[string]PersonMap) error {
 	x.data.List.Record = make([]Record, 0)
 
 	for _, personMap := range personMaps {
@@ -230,10 +226,8 @@ func (x *XML) UpdateMappings(personMaps map[string]PersonMap) {
 			From: personMap.FromPath,
 			To:   personMap.ToPath,
 		})
-	}
 }
 
-func (x *XML) WriteXML(xmlPath string) error {
 	xmlString, err := xml.MarshalIndent(&x.data, "  ", "    ")
 	if err != nil {
 		return err

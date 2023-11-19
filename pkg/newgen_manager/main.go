@@ -20,14 +20,8 @@ func Map(preserve bool, xmlPath, rtfPath string) {
 		os.Exit(0)
 	}
 
-	xmlParser := XML{}
-	err = xmlParser.ReadXML(XMLPath)
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(0)
-	}
-
-	previousMappings, err := xmlParser.GetPreviousMappings()
+	xml := &XML{}
+	previousMappings, err := xml.Read(XMLPath)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(0)
@@ -70,9 +64,7 @@ func Map(preserve bool, xmlPath, rtfPath string) {
 		os.Exit(0)
 	}
 
-	xmlParser.UpdateMappings(fmMapper.Mappings)
-
-	err = xmlParser.WriteXML(XMLPath)
+	err = xml.Write(XMLPath, fmMapper.Mappings)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(0)

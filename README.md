@@ -21,7 +21,7 @@ In this game, all user modded graphics are placed under a `graphics/` folder. Th
 1. Download the New GAN face pack and place it in the graphics folder. The latest facepack could be found at the original [NewGAN-Manager release page](https://github.com/Maradonna90/NewGAN-Manager/releases) and would be under `Facepack Download`. Like this ![](docs/img/facepack-download.png)
 2. Extract the file and the folder should have subfolders titled: `EECA`, `MESA` etc...
 3. Copy the `config.xml` file to the Facepack folder
-4. Generate the `.rtf` file (could refer to the YouTube video as a reference) needed, name it `newgen.rtf` and place it in the Facepack folder
-5. Place the binary inside the Facepack folder
-6. (TODO: fix this step) Type the command `./jaqen RTF_FILE_NAME IMAGE_FOLDER_ROOT_NAME --preserve --xml=XML_FILE_NAME` with `--preserve`, `--xml` as options
-7. (TODO: steps about reloading the skin)
+4. Generate the `.rtf` file needed, name it `newgen.rtf` and place it in the Facepack folder. If you don't know how to do it, watch [Zealand's video on the original NEWGan Manager](https://www.youtube.com/watch?v=pmdIkhfmY6w), the steps are between `9:28` to `12:28`
+5. Compile the binary by running `go build .` and place the binary inside the Facepack folder
+6. Execute the binary
+7. Reload the skin and enjoy.

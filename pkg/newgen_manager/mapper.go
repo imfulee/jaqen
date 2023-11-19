@@ -1,4 +1,4 @@
-package mapper
+package newgen_manager
 
 import (
 	"errors"
@@ -15,17 +15,12 @@ type IImages interface {
 
 // feels weird that I have to re insert the root path in mapper again
 type Mapper struct {
-	Preserve            bool
-	Images              IImages
-	ImageFolderRootPath string
-	Mappings            map[string]PersonMap
+	Preserve bool
+	Images   IImages
+	Mappings map[string]PersonMap
 }
 
 func (m *Mapper) Map(persons []Person) error {
-	if m.ImageFolderRootPath == "" {
-		return errors.New("did not set image folder root path")
-	}
-
 	for _, person := range persons {
 		if _, hasMapped := m.Mappings[person.id]; hasMapped && m.Preserve {
 			continue
@@ -40,7 +35,7 @@ func (m *Mapper) Map(persons []Person) error {
 		}
 
 		m.Mappings[person.id] = PersonMap{
-			FromPath: PathForImage(m.ImageFolderRootPath, person.ethnic, fromImage),
+			FromPath: PathForImage(person.ethnic, fromImage),
 			ToPath:   PathForGame(person.id),
 		}
 	}

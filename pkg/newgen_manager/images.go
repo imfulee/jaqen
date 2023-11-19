@@ -1,11 +1,12 @@
-package mapper
+package newgen_manager
 
 import (
 	"errors"
 	"fmt"
 	"math/rand"
 	"os"
-	"path"
+	"path/filepath"
+	"strings"
 
 	mapset "github.com/deckarep/golang-set/v2"
 )
@@ -15,13 +16,9 @@ type Images struct {
 }
 
 // `exclude` is a map of ethnic string to images
-func (imgs *Images) Init(imageFolderPath string, perserve bool, exclude map[Ethnic][]string) error {
+func (imgs *Images) Init(perserve bool, exclude map[Ethnic][]string) error {
 	if perserve && exclude == nil {
 		return errors.New("if preseve mode is on, exclude map should be given")
-	}
-
-	if imageFolderPath == "" {
-		return errors.New("no image folder root path")
 	}
 
 	ethnicities := [...]Ethnic{
@@ -74,10 +71,9 @@ func (imgs *Images) Init(imageFolderPath string, perserve bool, exclude map[Ethn
 			imagePool[ethnic] = mapset.NewSet[string]()
 		}
 
-		ethnicImageFolderPath := path.Join(imageFolderPath, ethnic)
-		ethnicImageFiles, error := os.ReadDir(ethnicImageFolderPath)
+		ethnicImageFiles, error := os.ReadDir(ethnic)
 		if error != nil {
-			return errors.Join(fmt.Errorf("cannot get ethnic folder %s", ethnicImageFolderPath), error)
+			return errors.Join(fmt.Errorf("cannot get ethnic folder %s", ethnic), error)
 		}
 
 		for _, ethnicImageFile := range ethnicImageFiles {
@@ -90,7 +86,7 @@ func (imgs *Images) Init(imageFolderPath string, perserve bool, exclude map[Ethn
 				continue
 			}
 
-			imagePool[ethnic].Add(filename)
+			imagePool[ethnic].Add(strings.TrimSuffix(filename, filepath.Ext(filename)))
 		}
 
 		currentPool := imagePool[ethnic]

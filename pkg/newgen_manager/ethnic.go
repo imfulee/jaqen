@@ -1,4 +1,4 @@
-package mapper
+package newgen_manager
 
 import (
 	"encoding/json"

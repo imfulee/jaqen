@@ -1,4 +1,4 @@
-package mapper
+package newgen_manager
 
 type Ethnic = string
 

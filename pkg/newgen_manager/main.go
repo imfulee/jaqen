@@ -11,10 +11,8 @@ func Map(preserve bool, xmlPath, rtfPath string) {
 	XMLPath := xmlPath
 	RTFPath := rtfPath
 
-	neMapper := NationEthnicMapper{}
-	neMapper.Init("")
-	rtfParser := RTF{NationEthnicMapper: &neMapper}
-	fmPersons, err := rtfParser.Parse(RTFPath)
+	rtf := RTF{GetEthnicFromNation: NationMapToEthnic}
+	persons, err := rtf.Parse(RTFPath)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(0)
@@ -58,7 +56,7 @@ func Map(preserve bool, xmlPath, rtfPath string) {
 		Mappings: previousMappings,
 	}
 
-	err = fmMapper.Map(fmPersons)
+	err = fmMapper.Map(persons)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(0)

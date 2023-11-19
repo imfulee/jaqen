@@ -1,13 +1,6 @@
 package newgen_manager
 
-import (
-	"encoding/json"
-	"errors"
-	"io"
-	"os"
-)
-
-var defaultNationEthnicMapping = map[string]string{
+var nationEthnicMapping = map[string]string{
 	"AFG": "MESA",
 	"AXL": "Scandinavian",
 	"ALB": "YugoGreek",
@@ -247,37 +240,7 @@ var defaultNationEthnicMapping = map[string]string{
 	"SPM": "Caucasian",
 }
 
-type NationEthnicMapper struct {
-	nationEthnicMap map[string]string
-}
-
-func (neMapper *NationEthnicMapper) Init(ethnicJsonPath string) error {
-	if ethnicJsonPath == "" {
-		neMapper.nationEthnicMap = defaultNationEthnicMapping
-		return nil
-	}
-
-	jsonFile, jsonFileErr := os.Open(ethnicJsonPath)
-	if jsonFileErr != nil {
-		return jsonFileErr
-	}
-	defer jsonFile.Close()
-
-	byteValue, err := io.ReadAll(jsonFile)
-	if err != nil {
-		return errors.Join(errors.New("cannot read all json data"), err)
-	}
-	nationToEthnicMap := map[string]string{}
-	if err := json.Unmarshal([]byte(byteValue), &nationToEthnicMap); err != nil {
-		return errors.Join(errors.New("cannot unmarshall json data"), err)
-	}
-
-	neMapper.nationEthnicMap = nationToEthnicMap
-
-	return nil
-}
-
-func (neMapper *NationEthnicMapper) Map(nationality string) (string, bool) {
-	ethnic, hasEthnic := neMapper.nationEthnicMap[nationality]
-	return ethnic, hasEthnic
+func NationMapToEthnic(nationality string) (ethnic string, hasEthnic bool) {
+	ethnic, hasEthnic = nationEthnicMapping[nationality]
+	return
 }

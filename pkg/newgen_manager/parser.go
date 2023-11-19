@@ -19,21 +19,17 @@ type Person struct {
 	ethnic string
 }
 
-type INationEthnicMapper interface {
-	Map(string) (string, bool)
-}
-
 type RTF struct {
-	NationEthnicMapper INationEthnicMapper
+	GetEthnicFromNation func(nationality string) (ethnic string, hasEthnic bool)
 }
 
 func (r RTF) getEthnic(nationality1, nationality2 string, ethnicValue int) (Ethnic, error) {
-	ethnic1, ok := r.NationEthnicMapper.Map(nationality1)
+	ethnic1, ok := r.GetEthnicFromNation(nationality1)
 	if !ok {
 		return "", errors.New("ethnic not found")
 	}
 
-	ethnic2, _ := r.NationEthnicMapper.Map(nationality2)
+	ethnic2, _ := r.GetEthnicFromNation(nationality2)
 
 	hasEthnic := func(ethnic string) bool {
 		return ethnic1 == ethnic || ethnic2 == ethnic
@@ -226,7 +222,7 @@ func (x *XML) Write(xmlPath string, personMaps map[string]PersonMap) error {
 			From: personMap.FromPath,
 			To:   personMap.ToPath,
 		})
-}
+	}
 
 	xmlString, err := xml.MarshalIndent(&x.data, "  ", "    ")
 	if err != nil {

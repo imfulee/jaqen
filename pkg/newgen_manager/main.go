@@ -28,7 +28,7 @@ func Map(preserve bool, xmlPath, rtfPath string) {
 	excludeImages := make(map[string][]string)
 	for _, mapping := range previousMappings {
 		strs := strings.Split(mapping.FromPath, "/")
-		if len(strs) != 3 {
+		if len(strs) != 2 {
 			fmt.Println("xml file bad format")
 			os.Exit(0)
 		}

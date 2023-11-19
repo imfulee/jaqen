@@ -7,19 +7,15 @@ import (
 )
 
 func Map(preserve bool, xmlPath, rtfPath string) {
-	Preserve := preserve
-	XMLPath := xmlPath
-	RTFPath := rtfPath
-
 	rtf := RTF{GetEthnicFromNation: NationMapToEthnic}
-	persons, err := rtf.Parse(RTFPath)
+	persons, err := rtf.Parse(rtfPath)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(0)
 	}
 
 	xml := &XML{}
-	previousMappings, err := xml.Read(XMLPath)
+	previousMappings, err := xml.Read(xmlPath)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(0)
@@ -43,26 +39,26 @@ func Map(preserve bool, xmlPath, rtfPath string) {
 		excludeImages[ethnic] = append(excludeImages[ethnic], imageFilename)
 	}
 
-	fmImages := Images{}
-	err = fmImages.Init(Preserve, excludeImages)
+	images := Images{}
+	err = images.Init(preserve, excludeImages)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(0)
 	}
 
-	fmMapper := Mapper{
-		Preserve: Preserve,
-		Images:   &fmImages,
+	mapper := Mapper{
+		Preserve: preserve,
+		Images:   &images,
 		Mappings: previousMappings,
 	}
 
-	err = fmMapper.Map(persons)
+	err = mapper.Map(persons)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(0)
 	}
 
-	err = xml.Write(XMLPath, fmMapper.Mappings)
+	err = xml.Write(xmlPath, mapper.Mappings)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(0)

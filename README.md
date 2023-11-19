@@ -20,7 +20,7 @@ In this game, all user modded graphics are placed under a `graphics/` folder. Th
 
 1. Download the New GAN face pack and place it in the graphics folder. The latest facepack could be found at the original [NewGAN-Manager release page](https://github.com/Maradonna90/NewGAN-Manager/releases) and would be under `Facepack Download`. Like this ![](docs/img/facepack-download.png)
 2. Extract the file and the folder should have subfolders titled: `EECA`, `MESA` etc...
-3. Copy the `config.xml` file to the Facepack folder
+3. Copy the `config.xml` file (under `example`) to the Facepack folder
 4. Generate the `.rtf` file needed, name it `newgen.rtf` and place it in the Facepack folder. If you don't know how to do it, watch [Zealand's video on the original NEWGan Manager](https://www.youtube.com/watch?v=pmdIkhfmY6w), the steps are between `9:28` to `12:28`
 5. Compile the binary by running `go build .` and place the binary inside the Facepack folder
 6. Execute the binary

@@ -3,7 +3,7 @@ package newgen_manager
 import (
 	"fmt"
 	"os"
-	"strings"
+	"path"
 )
 
 func Map(preserve bool, xmlPath, rtfPath string) {
@@ -23,14 +23,11 @@ func Map(preserve bool, xmlPath, rtfPath string) {
 
 	excludeImages := make(map[string][]string)
 	for _, mapping := range previousMappings {
-		strs := strings.Split(mapping.FromPath, "/")
-		if len(strs) != 2 {
+		ethnic, imageFilename := path.Split(mapping.FromPath)
+		if ethnic == "" || imageFilename == "" {
 			fmt.Println("xml file bad format")
 			os.Exit(0)
 		}
-
-		ethnic := strs[1]
-		imageFilename := strs[2]
 
 		if _, ok := excludeImages[ethnic]; !ok {
 			excludeImages[ethnic] = make([]string, 0)

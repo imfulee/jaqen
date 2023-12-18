@@ -120,14 +120,6 @@ func (imgs *Images) Init(perserve bool, exclude map[Ethnic][]string) error {
 }
 
 func (imgs *Images) Random(ethnic string) (string, error) {
-	if len(imgs.imagePool) == 0 {
-		return "", errors.New("there are no images in image pool")
-	}
-
-	if _, ok := imgs.imagePool[ethnic]; !ok {
-		return "", errors.New("no images for this ethnic")
-	}
-
 	chosenImage := ""
 
 	// get images from ethnic provided

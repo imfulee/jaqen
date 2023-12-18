@@ -81,6 +81,7 @@ func (imgs *Images) Init(perserve bool, exclude map[Ethnic][]string) error {
 			ethnicImageFiles, err := os.ReadDir(e)
 			if err != nil {
 				ethnicErr <- errors.Join(fmt.Errorf("cannot get ethnic folder %s", e), err)
+				return
 			}
 
 			for _, ethnicImageFile := range ethnicImageFiles {

@@ -12,7 +12,7 @@ I named it Jaqen based on Jaqen H'ghar having a wall of faces.
 
 I just wanted to learn go and just found the original didn't run well on Linux, as I think the original version works pretty well for Windows and Mac. However, this is just a fun side project for me. Even if I finish this off to a level I could accept, I don't intend on supporting it long term, you're very welcomed to submit PRs and Issues but I don't guarantee to fix/review it.
 
-Could I have just found a way to fix the Linux CI on that project? ~~probably.~~ I tried to fix it, but briefcase dependecies made it very hard for it to work with, I suspect changing to some other UI library or installer would be better. 
+Could I have just found a way to fix the Linux CI on that project? I tried fixing it again with by updating a few dependencies (such as breifcase) added some configs needed in the TOML file, but haven't got it working yet.
 
 ## Usage
 

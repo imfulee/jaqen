@@ -7,7 +7,6 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	"sync"
 
 	mapset "github.com/deckarep/golang-set/v2"
 )
@@ -67,53 +66,37 @@ func (imgs *Images) Init(perserve bool, exclude map[Ethnic][]string) error {
 	}
 
 	imagePool := make(map[Ethnic]mapset.Set[string])
-	ethnicErr := make(chan error)
-	var wg sync.WaitGroup
 	for _, ethnic := range ethnicities {
-		wg.Add(1)
-		go func(e string) {
-			defer wg.Done()
+		if _, ok := imagePool[ethnic]; !ok {
+			imagePool[ethnic] = mapset.NewSet[string]()
+		}
 
-			if _, ok := imagePool[e]; !ok {
-				imagePool[e] = mapset.NewSet[string]()
+		ethnicImageFiles, err := os.ReadDir(ethnic)
+		if err != nil {
+			return errors.Join(fmt.Errorf("cannot get ethnic folder %s", ethnic), err)
+		}
+
+		for _, ethnicImageFile := range ethnicImageFiles {
+			if ethnicImageFile.IsDir() {
+				continue
 			}
 
-			ethnicImageFiles, err := os.ReadDir(e)
-			if err != nil {
-				ethnicErr <- errors.Join(fmt.Errorf("cannot get ethnic folder %s", e), err)
-				return
+			filename := ethnicImageFile.Name()
+			if filename == "" {
+				continue
 			}
 
-			for _, ethnicImageFile := range ethnicImageFiles {
-				if ethnicImageFile.IsDir() {
-					continue
-				}
+			imagePool[ethnic].Add(strings.TrimSuffix(filename, filepath.Ext(filename)))
+		}
 
-				filename := ethnicImageFile.Name()
-				if filename == "" {
-					continue
-				}
+		currentPool := imagePool[ethnic]
+		excludePool := excludeSets[ethnic]
 
-				imagePool[e].Add(strings.TrimSuffix(filename, filepath.Ext(filename)))
-			}
+		if perserve && excludePool != nil {
+			imagePool[ethnic] = currentPool.Difference(excludePool)
+		}
 
-			currentPool := imagePool[e]
-			excludePool := excludeSets[e]
-			if perserve && excludePool != nil {
-				imagePool[e] = currentPool.Difference(excludePool)
-			}
-
-			imgs.imagePool[e] = imagePool[e].ToSlice()
-		}(ethnic)
-	}
-
-	go func() {
-		wg.Wait()
-		close(ethnicErr)
-	}()
-
-	if err := <-ethnicErr; err != nil {
-		return err
+		imgs.imagePool[ethnic] = imagePool[ethnic].ToSlice()
 	}
 
 	return nil

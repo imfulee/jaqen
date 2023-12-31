@@ -33,3 +33,5 @@ In this game, all user modded graphics are placed under a `graphics/` folder. Th
 This is just some notes on what I want it to do in the future.
 
 - Support FM2024 having the `r-` thing in front of the UID, potentially with a flag
+- Build a GUI, maybe with Go Wails?
+- The ability to execute the binary in a different directory

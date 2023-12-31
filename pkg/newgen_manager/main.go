@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path"
+	"strings"
 )
 
 func Map(preserve bool, xmlPath, rtfPath string) {
@@ -24,6 +25,8 @@ func Map(preserve bool, xmlPath, rtfPath string) {
 	excludeImages := make(map[string][]string)
 	for _, mapping := range previousMappings {
 		ethnic, imageFilename := path.Split(mapping.FromPath)
+		// ethnic would be ex. "YugoGreek/" so we should remove the trailing slash
+		ethnic = strings.Trim(ethnic, "/")
 		if ethnic == "" || imageFilename == "" {
 			fmt.Println("xml file bad format")
 			os.Exit(0)

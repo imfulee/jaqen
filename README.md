@@ -1,10 +1,12 @@
 # Jaqen
 
-> This is very much work in progress.
-
 A Football Manager New GAN Manager rewrite in go. The original could be found [here](https://github.com/Maradonna90/NewGAN-Manager).
 
 I named it Jaqen based on Jaqen H'ghar having a wall of faces.
+
+**This is not supported for Football Manager 2024!**
+
+> There is a change in the code where the id now has a `r-` prefix in front of the UIDs, I may get to it one day *shrug*. In the meantime you may be able to work around it through this video https://www.youtube.com/watch?v=ZhuVzb_7PZY
 
 ## Motivation
 
@@ -25,3 +27,9 @@ In this game, all user modded graphics are placed under a `graphics/` folder. Th
 5. Compile the binary by running `go build .` and place the binary inside the Facepack folder
 6. Execute the binary
 7. Reload the skin and enjoy.
+
+## Future Wants
+
+This is just some notes on what I want it to do in the future.
+
+- Support FM2024 having the `r-` thing in front of the UID, potentially with a flag

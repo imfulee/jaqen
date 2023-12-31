@@ -238,6 +238,9 @@ var nationEthnicMapping = map[string]string{
 	"BOE": "African",
 	"BLM": "Caucasian",
 	"SPM": "Caucasian",
+	"MGL": "Asian",
+	"KOS": "YugoGreek",
+	"ESW": "African",
 }
 
 func NationMapToEthnic(nationality string) (ethnic string, hasEthnic bool) {

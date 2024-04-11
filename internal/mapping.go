@@ -25,7 +25,7 @@ type XMLStruct struct {
 	} `xml:"list"`
 }
 
-type XMLParser struct {
+type Mapping struct {
 	instance   *XMLStruct
 	idImageMap map[PlayerID]FilePath
 	fmVersion  string
@@ -39,8 +39,8 @@ func convertPlayerIDToToPath(id PlayerID) string {
 	return fmt.Sprintf("graphics/pictures/person/%s/portrait", string(id))
 }
 
-func NewXMLParser(xmlPath string, fmVersion string) (*XMLParser, error) {
-	parser := &XMLParser{
+func NewMapping(xmlPath string, fmVersion string) (*Mapping, error) {
+	parser := &Mapping{
 		instance:   nil,
 		idImageMap: make(map[PlayerID]FilePath),
 		fmVersion:  fmVersion,
@@ -78,21 +78,21 @@ func NewXMLParser(xmlPath string, fmVersion string) (*XMLParser, error) {
 	return parser, nil
 }
 
-func (x *XMLParser) AssignedImages() []FilePath {
-	return MapValues(x.idImageMap)
+func (m *Mapping) AssignedImages() []FilePath {
+	return MapValues(m.idImageMap)
 }
 
-func (x *XMLParser) Exist(id PlayerID) bool {
-	_, ok := x.idImageMap[id]
+func (m *Mapping) Exist(id PlayerID) bool {
+	_, ok := m.idImageMap[id]
 	return ok
 }
 
-func (x *XMLParser) MapToImage(id PlayerID, filepath FilePath) {
-	x.idImageMap[id] = filepath
+func (m *Mapping) MapToImage(id PlayerID, filepath FilePath) {
+	m.idImageMap[id] = filepath
 }
 
-func (x *XMLParser) Save() error {
-	if x.instance == nil {
+func (m *Mapping) Save() error {
+	if m.instance == nil {
 		return errors.New("unintialised instance")
 	}
 

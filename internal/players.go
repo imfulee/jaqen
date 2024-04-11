@@ -9,6 +9,15 @@ import (
 	"strings"
 )
 
+type Ethnic string
+
+type PlayerID string
+
+type Player struct {
+	ID     PlayerID
+	Ethnic Ethnic
+}
+
 var ErrBadRTFFormat error = errors.New("bad RTF Format")
 
 func getEthnic(nationality1, nationality2 string, ethnicValue int) (Ethnic, error) {
@@ -77,11 +86,11 @@ func getEthnic(nationality1, nationality2 string, ethnicValue int) (Ethnic, erro
 	}
 }
 
-func GetPlayersBuilder(path string) func() ([]Player, error) {
+func GetPlayersBuilder(rtfPath string) func() ([]Player, error) {
 	return func() ([]Player, error) {
 		players := make([]Player, 0)
 
-		rtfFile, rtfErr := os.Open(path)
+		rtfFile, rtfErr := os.Open(rtfPath)
 		if rtfErr != nil {
 			return nil, rtfErr
 		}
@@ -125,8 +134,8 @@ func GetPlayersBuilder(path string) func() ([]Player, error) {
 				}
 
 				players = append(players, Player{
-					id:     PlayerID(id),
-					ethnic: ethnic,
+					ID:     PlayerID(id),
+					Ethnic: ethnic,
 				})
 			}
 		}

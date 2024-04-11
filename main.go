@@ -1,9 +1,7 @@
 package main
 
-import (
-	newgen_manager "jaqen/pkg/newgen_manager"
-)
+import cmd "jaqen/cmd"
 
 func main() {
-	newgen_manager.Map(true, "config.xml", "newgen.rtf")
+	cmd.Execute()
 }

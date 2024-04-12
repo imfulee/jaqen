@@ -1,5 +1,9 @@
 # Versions
 
+## 0.2
+
+- Could use flags to specify directories
+
 ## 0.1.1
 
 - Added new FM2024 ethnics 

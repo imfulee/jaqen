@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	mapper "jaqen/internal"
 	"os"
 	"path"
@@ -21,6 +22,18 @@ var rootCmd = &cobra.Command{
 	Short: "Creates your mapping file for Football Manager regen images",
 	Long:  `CLI that creates your mapping file for Football Manager regen images.`,
 	Run: func(cmd *cobra.Command, args []string) {
+		if _, err := os.Stat(imgDir); err != nil {
+			panic(errors.Join(errors.New("image directory could not be found"), err))
+		}
+
+		if _, err := os.Stat(xmlPath); err != nil {
+			panic(errors.Join(errors.New("xml file could not be found"), err))
+		}
+
+		if _, err := os.Stat(rtfPath); err != nil {
+			panic(errors.Join(errors.New("rtf file could not be found"), err))
+		}
+
 		getPlayers := mapper.GetPlayersBuilder(rtfPath)
 
 		mapping, err := mapper.NewMapping(xmlPath, fmVersion)

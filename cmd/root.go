@@ -5,6 +5,7 @@ import (
 	mapper "jaqen/internal"
 	"os"
 	"path"
+	"path/filepath"
 
 	"github.com/spf13/cobra"
 )
@@ -51,13 +52,31 @@ var rootCmd = &cobra.Command{
 			panic(err)
 		}
 
+		imgDirPathAbs, err := filepath.Abs(imgDir)
+		if err != nil {
+			panic(err)
+		}
+		xmlFilePathAbs, err := filepath.Abs(xmlPath)
+		if err != nil {
+			panic(err)
+		}
+
+		rel := ""
+		isXMLFileInsideImgDir := imgDirPathAbs == filepath.Dir(xmlFilePathAbs)
+		if !isXMLFileInsideImgDir {
+			rel, err = filepath.Rel(xmlFilePathAbs, imgDirPathAbs)
+			if err != nil {
+				panic(err)
+			}
+		}
+
 		for _, player := range players {
 			if preserve && mapping.Exist(player.ID) {
 				continue
 			}
 
 			imgFilename := imagePool.Random(player.Ethnic)
-			mapping.MapToImage(player.ID, mapper.FilePath(path.Join(string(player.Ethnic), string(imgFilename))))
+			mapping.MapToImage(player.ID, mapper.FilePath(path.Join(rel, string(player.Ethnic), string(imgFilename))))
 		}
 
 		if err := mapping.Save(); err != nil {

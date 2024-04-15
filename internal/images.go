@@ -7,6 +7,7 @@ import (
 	"os"
 	"path"
 	"regexp"
+	"strings"
 
 	mapset "github.com/deckarep/golang-set/v2"
 )
@@ -23,12 +24,19 @@ func NewImagePool(imageRootPath string, excludes []FilePath) (*ImagePool, error)
 		excludeSets[ethnic] = mapset.NewSet[FilePath]()
 	}
 
-	ethnicRegex := regexp.MustCompile(`^([a-zA-Z]+)`)
-	filenameRegex := regexp.MustCompile(`\d+`)
+	ethnictiesStrs := make([]string, len(Ethnicities))
+	for i, ethnic := range Ethnicities {
+		ethnictiesStrs[i] = string(ethnic)
+	}
+	ethnicRegexPattern := strings.Join(ethnictiesStrs, "|")
+	ethnicRegexPattern = strings.ReplaceAll(ethnicRegexPattern, " ", `\s`)
+	ethnicRegex := regexp.MustCompile(fmt.Sprintf(`\b(%s)\b`, ethnicRegexPattern))
+
+	imageFilenameRegex := regexp.MustCompile(`[^\/]+$`)
 
 	for _, filePath := range excludes {
-		ethnic := Ethnic(ethnicRegex.Find([]byte(filePath)))
-		filename := FilePath(filenameRegex.Find([]byte(filePath)))
+		ethnic := Ethnic(ethnicRegex.FindString(string(filePath)))
+		filename := FilePath(imageFilenameRegex.FindString(string(filePath)))
 		excludeSets[ethnic].Add(filename)
 	}
 

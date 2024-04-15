@@ -6,6 +6,7 @@ import (
 	"math/rand"
 	"os"
 	"path"
+	"path/filepath"
 	"regexp"
 	"strings"
 
@@ -53,7 +54,9 @@ func NewImagePool(imageRootPath string, excludes []FilePath) (*ImagePool, error)
 				continue
 			}
 
-			filename := file.Name()
+			// football manager requires filenames but not filename.png
+			fullFilename := file.Name()
+			filename := strings.TrimSuffix(filepath.Base(fullFilename), filepath.Ext(fullFilename))
 
 			if excludeSet, hasSet := excludeSets[Ethnic(ethnic)]; hasSet {
 				if excludeSet.Contains(FilePath(filename)) {

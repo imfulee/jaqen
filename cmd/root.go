@@ -6,6 +6,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"strings"
 
 	"github.com/spf13/cobra"
 )
@@ -69,6 +70,7 @@ var rootCmd = &cobra.Command{
 				panic(err)
 			}
 		}
+		rel = strings.TrimPrefix(rel, "./")
 
 		for _, player := range players {
 			if preserve && mapping.Exist(player.ID) {

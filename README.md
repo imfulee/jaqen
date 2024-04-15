@@ -85,3 +85,4 @@ This is just some notes on what I want it to do in the future.
 - Build a GUI, maybe with Go Wails?
 - Create a build pipeline to create executables
 - There are some performance left on the table, currently the way reading and writing to file works relatively slow compared to what a buffered read and a generator could do. Probably faster than Python though :p
+- Remove the need to copy the `config.xml` file into the diretory

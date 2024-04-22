@@ -14,10 +14,11 @@ Download the repository and `go install`
 
 There are flags that you could use to specify the paths for various files if you would wish to change the defaults
 
-- `-xml` spcifies the xml path
+- `-xml` specifies the xml path
 - `-rtf` specifies the rtf path
 - `-img` specifies the image root directory
 - `-p` preserves the current xml mapping
+- `-ver` could specify the football manager version, this defaults to `2024`, and all other string will be parsed as "others"
 
 ## Basic Setup
 
@@ -27,11 +28,11 @@ There are flags that you could use to specify the paths for various files if you
 
 ![steam-directory](/docs/img/steam-directory.png)
 
-**Create the graphics dirtectory if you don't have it.**  In the game, all user modded graphics are placed under a `graphics/` directory. The graphics directory path might look something like this: `$HOME/.local/share/Steam/steamapps/compatdata/ID_NUMBER/pfx/drive_c/users/steamuser/Documents/Sports Interactive/Football Manager FM_VERSION/graphics`. The `graphics/` directory might not be existant and you may have to create your own.
+**Create the graphics directory if you don't have it.** In the game, all user modded graphics are placed under a `graphics/` directory. The graphics directory path might look something like this: `$HOME/.local/share/Steam/steamapps/compatdata/ID_NUMBER/pfx/drive_c/users/steamuser/Documents/Sports Interactive/Football Manager FM_VERSION/graphics`. The `graphics/` directory might not be existant and you may have to create your own.
 
 ![graphics-directory](/docs/img/graphics-directory.png)
 
-**Download the New GAN face pack and place it in the graphics directory.** The latest facepack could be found at the original [NewGAN-Manager release page](https://github.com/Maradonna90/NewGAN-Manager/releases) and would be under `Facepack Download`. I recommend renaming it as newgen.  
+**Download the New GAN face pack and place it in the graphics directory.** The latest facepack could be found at the original [NewGAN-Manager release page](https://github.com/Maradonna90/NewGAN-Manager/releases) and would be under `Facepack Download`. I recommend renaming it as newgen.
 
 ![facepack-download-img](docs/img/facepack-download.png)
 
@@ -50,7 +51,7 @@ There are flags that you could use to specify the paths for various files if you
 **Download the repository, build the binary and move the binary to your graphics directory**
 
 ```bash
-cd REPOSITORY_PATH 
+cd REPOSITORY_PATH
 go build .
 
 fm_graphics_dir="$HOME/.local/share/Steam/steamapps/compatdata/ID_NUMBER/pfx/drive_c/users/steamuser/Documents/Sports Interactive/Football Manager FM_VERSION/graphics/newgen"
@@ -74,7 +75,7 @@ If you don't want to run the long command in the future, you could also setup an
 ```bash
 newgancli() {
     fm_graphics_dir=".local/share/Steam/steamapps/compatdata/ID_NUMBER/pfx/drive_c/users/steamuser/Documents/Sports Interactive/Football Manager FM_VERSION/graphics/"
-    $fm_graphics_dir/jaqen 
+    $fm_graphics_dir/jaqen
 }
 ```
 
@@ -85,4 +86,4 @@ This is just some notes on what I want it to do in the future.
 - Build a GUI, maybe with Go Wails?
 - Create a build pipeline to create executables
 - There are some performance left on the table, currently the way reading and writing to file works relatively slow compared to what a buffered read and a generator could do. Probably faster than Python though :p
-- Remove the need to copy the `config.xml` file into the diretory
+- Remove the need to copy the `config.xml` file into the directory

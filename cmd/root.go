@@ -77,7 +77,11 @@ var rootCmd = &cobra.Command{
 				continue
 			}
 
-			imgFilename := imagePool.Random(player.Ethnic)
+			imgFilename, err := imagePool.Random(player.Ethnic)
+			if err != nil {
+				panic(err)
+			}
+
 			mapping.MapToImage(player.ID, mapper.FilePath(path.Join(rel, string(player.Ethnic), string(imgFilename))))
 		}
 

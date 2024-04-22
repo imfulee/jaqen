@@ -71,18 +71,22 @@ func NewImagePool(imageRootPath string, excludes []FilePath) (*ImagePool, error)
 	return &ImagePool{pool}, nil
 }
 
-func (images *ImagePool) Random(ethnic Ethnic) FilePath {
+func (images *ImagePool) Random(ethnic Ethnic) (FilePath, error) {
+	var index int
+
 	length := len(images.pool[ethnic])
 	if length == 0 {
-		return ""
+		return "", fmt.Errorf("empty image pool for %s", ethnic)
+	} else if length == 1 {
+		index = 0
+	} else {
+		index = rand.Intn(length - 1)
 	}
-
-	index := rand.Intn(length - 1)
 
 	filename := images.pool[ethnic][index]
 
 	images.pool[ethnic][index] = images.pool[ethnic][length-1]
 	images.pool[ethnic] = images.pool[ethnic][:length-1]
 
-	return filename
+	return filename, nil
 }

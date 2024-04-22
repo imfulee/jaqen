@@ -275,4 +275,5 @@ var NationEthnicMapping = map[string]Ethnic{
 	"MGL": Asian,
 	"KOS": YugoslavGreek,
 	"ESW": African,
+	"SGP": Asian,
 }

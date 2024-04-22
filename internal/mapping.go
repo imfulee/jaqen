@@ -7,6 +7,7 @@ import (
 	"io"
 	"os"
 	"regexp"
+	"strings"
 )
 
 type Record struct {
@@ -31,8 +32,24 @@ type Mapping struct {
 	fmVersion  string
 }
 
-func convertToPathToPlayerID(toPath string, idRegex *regexp.Regexp) PlayerID {
-	return PlayerID(idRegex.Find([]byte(toPath)))
+func convertToPathToPlayerID(toPath string, fmVersion string) PlayerID {
+	var idRegex *regexp.Regexp
+	switch fmVersion {
+	case "2024":
+		idRegex = regexp.MustCompile(`r-\d+`)
+	default:
+		idRegex = regexp.MustCompile(`\d+`)
+	}
+
+	playerID := PlayerID(idRegex.Find([]byte(toPath)))
+
+	switch fmVersion {
+	case "2024":
+		playerID = PlayerID(strings.TrimPrefix(string(playerID), "r-"))
+	default:
+	}
+
+	return playerID
 }
 
 func convertPlayerIDToToPath(id PlayerID) string {
@@ -61,16 +78,8 @@ func NewMapping(xmlPath string, fmVersion string) (*Mapping, error) {
 		return nil, errors.Join(errors.New("cannot unmarshall xml file"), err)
 	}
 
-	var idRegex *regexp.Regexp
-	switch parser.fmVersion {
-	case "2024":
-		idRegex = regexp.MustCompile(`r-\d+`)
-	default:
-		idRegex = regexp.MustCompile(`\d+`)
-	}
-
 	for _, record := range parser.instance.List.Record {
-		playerID := convertToPathToPlayerID(record.To, idRegex)
+		playerID := convertToPathToPlayerID(record.To, parser.fmVersion)
 		filepath := FilePath(record.From)
 		parser.idImageMap[playerID] = filepath
 	}

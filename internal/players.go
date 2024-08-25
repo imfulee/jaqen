@@ -3,6 +3,7 @@ package mapper
 import (
 	"bufio"
 	"errors"
+	"fmt"
 	"os"
 	"regexp"
 	"strconv"
@@ -18,12 +19,12 @@ type Player struct {
 	Ethnic Ethnic
 }
 
-var ErrBadRTFFormat error = errors.New("bad RTF Format")
+var ErrBadRTFFormat string = "Bad RTF Format:\n%w"
 
 func getEthnic(nationality1, nationality2 string, ethnicValue int) (Ethnic, error) {
 	ethnic1, ok := NationEthnicMapping[nationality1]
 	if !ok {
-		return "", errors.New("ethnic not found")
+		return "", fmt.Errorf("ethnic not found for country initials: %s", nationality1)
 	}
 
 	ethnic2 := NationEthnicMapping[nationality2]
@@ -82,7 +83,7 @@ func getEthnic(nationality1, nationality2 string, ethnicValue int) (Ethnic, erro
 		}
 		return Asian, nil
 	default:
-		return "", errors.New("ethnic not found")
+		return "", fmt.Errorf("ethnic value not found: %d", ethnicValue)
 	}
 }
 
@@ -101,16 +102,19 @@ func GetPlayersBuilder(rtfPath string) func() ([]Player, error) {
 			return nil, err
 		}
 
+		getEthnicErrors := make([]error, 0)
+
 		rtfScanner := bufio.NewScanner(rtfFile)
 		for rtfScanner.Scan() {
 			rtfLine := rtfScanner.Text()
 			uidByte := UIDRegex.Find([]byte(rtfLine))
+
 			if uidByte != nil {
 				id := string(uidByte)
 
 				rtfData := strings.Split(rtfLine, "|")
 				if len(rtfData) < 8 {
-					return nil, errors.Join(ErrBadRTFFormat, errors.New("not enough lines in RTF line"))
+					return nil, fmt.Errorf(ErrBadRTFFormat, fmt.Errorf("not enough lines in RTF line: %s", rtfLine))
 				}
 
 				for rtfDataIndex := range rtfData {
@@ -121,16 +125,14 @@ func GetPlayersBuilder(rtfPath string) func() ([]Player, error) {
 				if ethniceValueErr != nil {
 					return nil, ethniceValueErr
 				}
-				if ethnicValue > 10 {
-					return nil, errors.Join(ErrBadRTFFormat, errors.New("ethnic value out of bounds"))
-				}
 
 				nationality1 := rtfData[2]
 				nationality2 := rtfData[3]
 
 				ethnic, err := getEthnic(nationality1, nationality2, ethnicValue)
 				if err != nil {
-					return nil, errors.Join(ErrBadRTFFormat, err)
+					getEthnicErrors = append(getEthnicErrors, err)
+					continue
 				}
 
 				players = append(players, Player{
@@ -138,6 +140,10 @@ func GetPlayersBuilder(rtfPath string) func() ([]Player, error) {
 					Ethnic: ethnic,
 				})
 			}
+		}
+
+		if len(getEthnicErrors) > 0 {
+			return nil, fmt.Errorf(ErrBadRTFFormat, errors.Join(getEthnicErrors...))
 		}
 
 		if rtfScannerErr := rtfScanner.Err(); rtfScannerErr != nil {

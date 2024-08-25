@@ -1,19 +1,24 @@
 # Versions
 
+## Next Tag 
+
+- Feature: Report which nations not found in the RTF file
+- Feature: Added Singapore to nations map
+
 ## 0.2.1
 
-- Bug fixes: panics when preserve
+- Fix: Panics when preserve
 
 ## 0.2
 
-- Could use flags to specify directories
+- Feature: Could use flags to specify directories
 
 ## 0.1.1
 
-- Added new FM2024 ethnics
-- Rollback concurrent bug
-- Fixed mapped file path to have extra `/`
+- Feature: Added new FM2024 ethnics
+- Fix: Rollback concurrent bug
+- Fix: Fixed mapped file path to have extra `/`
 
 ## 0.1.0
 
-- Initial working version
+- Feature: Initial working version

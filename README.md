@@ -1,6 +1,6 @@
 # Jaqen
 
-Create and manage your image file mapping to face profiles in Football Manager. Inspired by [Football Manager New GAN Manager written by Marco et al.](https://github.com/Maradonna90/NewGAN-Manager) I named it Jaqen based on Jaqen H'ghar having a wall of faces.
+Create and manage your image file mapping to face profiles in Football Manager. Inspired by [NewGAN-Manager](https://github.com/Maradonna90/NewGAN-Manager), I named it Jaqen based on Jaqen H'ghar having a wall of faces.
 
 ## Motivation
 

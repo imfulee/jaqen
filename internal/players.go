@@ -10,15 +10,6 @@ import (
 	"strings"
 )
 
-type Ethnic string
-
-type PlayerID string
-
-type Player struct {
-	ID     PlayerID
-	Ethnic Ethnic
-}
-
 var ErrBadRTFFormat string = "Bad RTF Format:\n%w"
 
 func getEthnic(nationality1, nationality2 string, ethnicValue int) (Ethnic, error) {

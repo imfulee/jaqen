@@ -1,8 +1,9 @@
 package cmd
 
 import (
-	"errors"
+	"fmt"
 	mapper "jaqen/internal"
+	"log"
 	"os"
 	"path"
 	"path/filepath"
@@ -25,41 +26,41 @@ var rootCmd = &cobra.Command{
 	Long:  `CLI that creates your mapping file for Football Manager regen images.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if _, err := os.Stat(imgDir); err != nil {
-			panic(errors.Join(errors.New("image directory could not be found"), err))
+			log.Fatalln(fmt.Errorf("image directory could not be found: %w", err))
 		}
 
 		if _, err := os.Stat(xmlPath); err != nil {
-			panic(errors.Join(errors.New("xml file could not be found"), err))
+			log.Fatalln(fmt.Errorf("xml file could not be found: %w", err))
 		}
 
 		if _, err := os.Stat(rtfPath); err != nil {
-			panic(errors.Join(errors.New("rtf file could not be found"), err))
+			log.Fatalln(fmt.Errorf("rtf file could not be found: %w", err))
 		}
 
 		getPlayers := mapper.GetPlayersBuilder(rtfPath)
 
 		mapping, err := mapper.NewMapping(xmlPath, fmVersion)
 		if err != nil {
-			panic(err)
+			log.Fatalln(err)
 		}
 
 		imagePool, err := mapper.NewImagePool(imgDir, mapping.AssignedImages())
 		if err != nil {
-			panic(err)
+			log.Fatalln(err)
 		}
 
 		players, err := getPlayers()
 		if err != nil {
-			panic(err)
+			log.Fatalln(err)
 		}
 
 		imgDirPathAbs, err := filepath.Abs(imgDir)
 		if err != nil {
-			panic(err)
+			log.Fatalln(err)
 		}
 		xmlFilePathAbs, err := filepath.Abs(xmlPath)
 		if err != nil {
-			panic(err)
+			log.Fatalln(err)
 		}
 
 		rel := ""
@@ -67,7 +68,7 @@ var rootCmd = &cobra.Command{
 		if !isXMLFileInsideImgDir {
 			rel, err = filepath.Rel(xmlFilePathAbs, imgDirPathAbs)
 			if err != nil {
-				panic(err)
+				log.Fatalln(err)
 			}
 		}
 		rel = strings.TrimPrefix(rel, "./")
@@ -79,24 +80,26 @@ var rootCmd = &cobra.Command{
 
 			imgFilename, err := imagePool.Random(player.Ethnic)
 			if err != nil {
-				panic(err)
+				log.Fatalln(err)
 			}
 
 			mapping.MapToImage(player.ID, mapper.FilePath(path.Join(rel, string(player.Ethnic), string(imgFilename))))
 		}
 
 		if err := mapping.Save(); err != nil {
-			panic(err)
+			log.Fatalln(err)
 		}
 
-		mapping.Write(xmlPath)
+		if err := mapping.Write(xmlPath); err != nil {
+			log.Fatalln(err)
+		}
 	},
 }
 
 func Execute() {
 	err := rootCmd.Execute()
 	if err != nil {
-		os.Exit(1)
+		log.Fatalln(err)
 	}
 }
 

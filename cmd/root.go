@@ -70,6 +70,11 @@ var rootCmd = &cobra.Command{
 			if !cmd.Flags().Changed(flagkeys_fmversion) && configFromFile.FMVersion != nil {
 				fmVersion = *configFromFile.FMVersion
 			}
+
+			err = mapper.OverrideNationEthnicMapping(*configFromFile.MappingOverride)
+			if err != nil {
+				log.Fatalln(err)
+			}
 		}
 
 		if _, err := os.Stat(imgDir); err != nil {

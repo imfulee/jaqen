@@ -1,5 +1,9 @@
 package mapper
 
+import (
+	mapset "github.com/deckarep/golang-set/v2"
+)
+
 const (
 	African                     Ethnic = "African"
 	Asian                       Ethnic = "Asian"
@@ -33,6 +37,8 @@ var Ethnicities = [...]Ethnic{
 	SpanishMediterranean,
 	YugoslavGreek,
 }
+
+var EthnicSet = mapset.NewSet[Ethnic]()
 
 var NationEthnicMapping = map[string]Ethnic{
 	"AFG": MiddleEastSouthAmerican,
@@ -276,4 +282,10 @@ var NationEthnicMapping = map[string]Ethnic{
 	"ZAM": African,
 	"ZAN": African,
 	"ZIM": African,
+}
+
+func init() {
+	for _, ethnic := range Ethnicities {
+		EthnicSet.Add(ethnic)
+	}
 }

@@ -6,4 +6,5 @@ type JaqenConfig struct {
 	RTFPath         *string            `field:"rtf_path"`
 	IMGPath         *string            `field:"img_path"`
 	FMVersion       *string            `field:"fm_version"`
+	MappingOverride *map[string]string `field:"mapping_override"`
 }

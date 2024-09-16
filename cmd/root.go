@@ -1,7 +1,9 @@
 package cmd
 
 import (
+	"encoding/json"
 	"fmt"
+	"io"
 	mapper "jaqen/internal"
 	"log"
 	"os"
@@ -13,11 +15,21 @@ import (
 )
 
 var (
-	preserve  bool
-	xmlPath   string
-	rtfPath   string
-	imgDir    string
-	fmVersion string
+	preserve   bool
+	xmlPath    string
+	rtfPath    string
+	imgDir     string
+	fmVersion  string
+	configPath string
+)
+
+const (
+	flagkeys_preserve  = "preserve"
+	flagkeys_xml       = "xml"
+	flagkeys_rtf       = "rtf"
+	flagkeys_img       = "img"
+	flagkeys_fmversion = "ver"
+	flagkeys_config    = "config"
 )
 
 var rootCmd = &cobra.Command{
@@ -25,6 +37,41 @@ var rootCmd = &cobra.Command{
 	Short: "Creates your mapping file for Football Manager regen images",
 	Long:  `CLI that creates your mapping file for Football Manager regen images.`,
 	Run: func(cmd *cobra.Command, args []string) {
+		var configFromFile JaqenConfig
+		if _, err := os.Stat(configPath); err == nil {
+			file, err := os.Open(configPath)
+			if err != nil {
+				log.Fatalln(err)
+			}
+			bytes, err := io.ReadAll(file)
+			if err != nil {
+				log.Fatalln(err)
+			}
+			err = json.Unmarshal(bytes, &configFromFile)
+			if err != nil {
+				log.Fatalln(err)
+			}
+
+			if !cmd.Flags().Changed(flagkeys_preserve) && configFromFile.Preserve != nil {
+				preserve = *configFromFile.Preserve
+			}
+			if !cmd.Flags().Changed(flagkeys_img) && configFromFile.IMGPath != nil {
+				imgDir = *configFromFile.IMGPath
+			}
+			if !cmd.Flags().Changed(flagkeys_img) && configFromFile.IMGPath != nil {
+				imgDir = *configFromFile.IMGPath
+			}
+			if !cmd.Flags().Changed(flagkeys_xml) && configFromFile.XMLPath != nil {
+				xmlPath = *configFromFile.XMLPath
+			}
+			if !cmd.Flags().Changed(flagkeys_rtf) && configFromFile.RTFPath != nil {
+				rtfPath = *configFromFile.RTFPath
+			}
+			if !cmd.Flags().Changed(flagkeys_fmversion) && configFromFile.FMVersion != nil {
+				fmVersion = *configFromFile.FMVersion
+			}
+		}
+
 		if _, err := os.Stat(imgDir); err != nil {
 			log.Fatalln(fmt.Errorf("image directory could not be found: %w", err))
 		}
@@ -104,9 +151,10 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.Flags().BoolVarP(&preserve, "preserve", "p", false, "Preserve previous settings")
-	rootCmd.Flags().StringVar(&xmlPath, "xml", "./config.xml", "Specify XML file path")
-	rootCmd.Flags().StringVar(&rtfPath, "rtf", "./newgen.rtf", "Specify RTF file path")
-	rootCmd.Flags().StringVar(&imgDir, "img", "./", "Specify the image directory path")
-	rootCmd.Flags().StringVar(&fmVersion, "ver", "2024", "Specify the football manager version")
+	rootCmd.Flags().BoolVarP(&preserve, flagkeys_preserve, "p", false, "Preserve previous settings")
+	rootCmd.Flags().StringVar(&xmlPath, flagkeys_xml, "./config.xml", "Specify XML file path")
+	rootCmd.Flags().StringVar(&rtfPath, flagkeys_rtf, "./newgen.rtf", "Specify RTF file path")
+	rootCmd.Flags().StringVar(&imgDir, flagkeys_img, "./", "Specify the image directory path")
+	rootCmd.Flags().StringVar(&fmVersion, flagkeys_fmversion, "2024", "Specify the football manager version")
+	rootCmd.Flags().StringVar(&configPath, flagkeys_config, "./jaqen.json", "Specify the config file path")
 }

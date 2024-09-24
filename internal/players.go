@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-var ErrBadRTFFormat string = "Bad RTF Format:\n%w"
+var ErrBadRTFFormat string = "bad RTF Format:\n%w"
 
 func getEthnic(nationality1, nationality2 string, ethnicValue int) (Ethnic, error) {
 	ethnic1, ok := NationEthnicMapping[nationality1]
@@ -78,69 +78,64 @@ func getEthnic(nationality1, nationality2 string, ethnicValue int) (Ethnic, erro
 	}
 }
 
-func GetPlayersBuilder(rtfPath string) func() ([]Player, error) {
-	return func() ([]Player, error) {
-		players := make([]Player, 0)
+func GetPlayers(rtfPath string) ([]Player, error) {
+	players := make([]Player, 0)
 
-		rtfFile, rtfErr := os.Open(rtfPath)
-		if rtfErr != nil {
-			return nil, rtfErr
-		}
-		defer rtfFile.Close()
-
-		UIDRegex, err := regexp.Compile("([0-9]){7,}")
-		if err != nil {
-			return nil, err
-		}
-
-		getEthnicErrors := make([]error, 0)
-
-		rtfScanner := bufio.NewScanner(rtfFile)
-		for rtfScanner.Scan() {
-			rtfLine := rtfScanner.Text()
-			uidByte := UIDRegex.Find([]byte(rtfLine))
-
-			if uidByte != nil {
-				id := string(uidByte)
-
-				rtfData := strings.Split(rtfLine, "|")
-				if len(rtfData) < 8 {
-					return nil, fmt.Errorf(ErrBadRTFFormat, fmt.Errorf("not enough lines in RTF line: %s", rtfLine))
-				}
-
-				for rtfDataIndex := range rtfData {
-					rtfData[rtfDataIndex] = strings.Trim(rtfData[rtfDataIndex], " ")
-				}
-
-				ethnicValue, ethniceValueErr := strconv.Atoi(rtfData[7])
-				if ethniceValueErr != nil {
-					return nil, ethniceValueErr
-				}
-
-				nationality1 := rtfData[2]
-				nationality2 := rtfData[3]
-
-				ethnic, err := getEthnic(nationality1, nationality2, ethnicValue)
-				if err != nil {
-					getEthnicErrors = append(getEthnicErrors, err)
-					continue
-				}
-
-				players = append(players, Player{
-					ID:     PlayerID(id),
-					Ethnic: ethnic,
-				})
-			}
-		}
-
-		if len(getEthnicErrors) > 0 {
-			return nil, fmt.Errorf(ErrBadRTFFormat, errors.Join(getEthnicErrors...))
-		}
-
-		if rtfScannerErr := rtfScanner.Err(); rtfScannerErr != nil {
-			return nil, rtfScannerErr
-		}
-
-		return players, nil
+	rtfFile, rtfErr := os.Open(rtfPath)
+	if rtfErr != nil {
+		return nil, rtfErr
 	}
+	defer rtfFile.Close()
+
+	UIDRegex := regexp.MustCompile("([0-9]){7,}")
+
+	getEthnicErrors := make([]error, 0)
+
+	rtfScanner := bufio.NewScanner(rtfFile)
+	for rtfScanner.Scan() {
+		rtfLine := rtfScanner.Text()
+		uidByte := UIDRegex.Find([]byte(rtfLine))
+
+		if uidByte != nil {
+			id := string(uidByte)
+
+			rtfData := strings.Split(rtfLine, "|")
+			if len(rtfData) < 8 {
+				return nil, fmt.Errorf(ErrBadRTFFormat, fmt.Errorf("not enough lines in RTF line: %s", rtfLine))
+			}
+
+			for rtfDataIndex := range rtfData {
+				rtfData[rtfDataIndex] = strings.Trim(rtfData[rtfDataIndex], " ")
+			}
+
+			ethnicValue, ethniceValueErr := strconv.Atoi(rtfData[7])
+			if ethniceValueErr != nil {
+				return nil, ethniceValueErr
+			}
+
+			nationality1 := rtfData[2]
+			nationality2 := rtfData[3]
+
+			ethnic, err := getEthnic(nationality1, nationality2, ethnicValue)
+			if err != nil {
+				getEthnicErrors = append(getEthnicErrors, err)
+				continue
+			}
+
+			players = append(players, Player{
+				ID:     PlayerID(id),
+				Ethnic: ethnic,
+			})
+		}
+	}
+
+	if len(getEthnicErrors) > 0 {
+		return nil, fmt.Errorf(ErrBadRTFFormat, errors.Join(getEthnicErrors...))
+	}
+
+	if rtfScannerErr := rtfScanner.Err(); rtfScannerErr != nil {
+		return nil, rtfScannerErr
+	}
+
+	return players, nil
 }

@@ -89,8 +89,6 @@ var rootCmd = &cobra.Command{
 			log.Fatalln(fmt.Errorf("rtf file could not be found: %w", err))
 		}
 
-		getPlayers := mapper.GetPlayersBuilder(rtfPath)
-
 		mapping, err := mapper.NewMapping(xmlPath, fmVersion)
 		if err != nil {
 			log.Fatalln(err)
@@ -101,7 +99,7 @@ var rootCmd = &cobra.Command{
 			log.Fatalln(err)
 		}
 
-		players, err := getPlayers()
+		players, err := mapper.GetPlayers(rtfPath)
 		if err != nil {
 			log.Fatalln(err)
 		}

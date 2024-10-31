@@ -1,32 +1,31 @@
-package mapper
+package internal
 
 import (
-	"errors"
+	"encoding/json"
 	"fmt"
+	"io"
+	"os"
 )
 
-func MapValues[M ~map[K]V, K comparable, V any](m M) []V {
-	r := make([]V, 0, len(m))
-	for _, v := range m {
-		r = append(r, v)
-	}
-	return r
-}
+func ReadConfig(filePath string) (JaqenConfig, error) {
+	var config JaqenConfig
 
-func OverrideNationEthnicMapping(overrides map[string]string) error {
-	overrideErrors := []error{}
-
-	for nation, ethnic := range overrides {
-		if IsValidEthnic(ethnic) {
-			overrideErrors = append(overrideErrors, fmt.Errorf(`ethnic value "%s" is not valid ethnic`, ethnic))
-		}
-
-		NationEthnicMapping[nation] = Ethnic(ethnic)
+	if _, err := os.Stat(filePath); err != nil {
+		return config, fmt.Errorf("could not find file: %w", err)
 	}
 
-	if len(overrideErrors) > 0 {
-		return errors.Join(overrideErrors...)
+	file, err := os.Open(filePath)
+	if err != nil {
+		return config, err
+	}
+	bytes, err := io.ReadAll(file)
+	if err != nil {
+		return config, err
+	}
+	err = json.Unmarshal(bytes, &config)
+	if err != nil {
+		return config, err
 	}
 
-	return nil
+	return config, nil
 }

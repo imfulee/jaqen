@@ -1,10 +1,9 @@
 package cmd
 
 import (
-	"encoding/json"
 	"fmt"
-	"io"
-	mapper "jaqen/internal"
+	internal "jaqen/internal"
+	mapper "jaqen/pkgs"
 	"log"
 	"os"
 	"path"
@@ -37,17 +36,8 @@ var rootCmd = &cobra.Command{
 	Short: "Creates your mapping file for Football Manager regen images",
 	Long:  `CLI that creates your mapping file for Football Manager regen images.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		var configFromFile JaqenConfig
 		if _, err := os.Stat(configPath); err == nil {
-			file, err := os.Open(configPath)
-			if err != nil {
-				log.Fatalln(err)
-			}
-			bytes, err := io.ReadAll(file)
-			if err != nil {
-				log.Fatalln(err)
-			}
-			err = json.Unmarshal(bytes, &configFromFile)
+			configFromFile, err := internal.ReadConfig(configPath)
 			if err != nil {
 				log.Fatalln(err)
 			}

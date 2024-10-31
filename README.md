@@ -8,7 +8,7 @@ I found the original didn't run well on Linux, but works pretty well for Windows
 
 ## Usage
 
-**If you're not interested in configuring your own setup, just read the [basic setup](https://github.com/jaqen/tree/release/docs/basic_setup.md)**
+**If you're not interested in configuring your own setup, just read the [basic setup](./docs/basic_setup.md)**
 
 These are the flags that you could use to specify the paths for various files if you would wish to change the defaults
 

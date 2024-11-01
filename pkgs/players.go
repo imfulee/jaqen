@@ -41,7 +41,7 @@ func getEthnic(nationality1, nationality2 string, ethnicValue int) (Ethnic, erro
 			hasEthnic(African) ||
 			hasEthnic(Asian) ||
 			hasEthnic(MiddleEastNorthAfrican) ||
-			hasEthnic(MiddleEastSouthAmerican) ||
+			hasEthnic(MiddleEastSouthAsian) ||
 			hasEthnic(EasternEuropeanCentralAsian) {
 			return SouthAmerican, nil
 		}
@@ -50,8 +50,8 @@ func getEthnic(nationality1, nationality2 string, ethnicValue int) (Ethnic, erro
 		}
 		return ethnic2, nil
 	case 2:
-		if hasEthnic(MiddleEastSouthAmerican) {
-			return MiddleEastSouthAmerican, nil
+		if hasEthnic(MiddleEastSouthAsian) {
+			return MiddleEastSouthAsian, nil
 		}
 		return MiddleEastNorthAfrican, nil
 	case 3, 6, 7, 8, 9:
@@ -65,7 +65,7 @@ func getEthnic(nationality1, nationality2 string, ethnicValue int) (Ethnic, erro
 		}
 		return African, nil
 	case 4:
-		return MiddleEastSouthAmerican, nil
+		return MiddleEastSouthAsian, nil
 	case 5:
 		return SouthEastAsian, nil
 	case 10:

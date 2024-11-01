@@ -1,10 +1,11 @@
 package internal
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 	"os"
+
+	"github.com/pelletier/go-toml/v2"
 )
 
 func ReadConfig(filePath string) (JaqenConfig, error) {
@@ -22,7 +23,7 @@ func ReadConfig(filePath string) (JaqenConfig, error) {
 	if err != nil {
 		return config, err
 	}
-	err = json.Unmarshal(bytes, &config)
+	err = toml.Unmarshal(bytes, &config)
 	if err != nil {
 		return config, err
 	}

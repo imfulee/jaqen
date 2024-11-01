@@ -1,9 +1,12 @@
 module jaqen
 
-go 1.21
+go 1.21.0
+
+toolchain go1.23.2
 
 require (
 	github.com/deckarep/golang-set/v2 v2.6.0
+	github.com/pelletier/go-toml/v2 v2.2.3
 	github.com/spf13/cobra v1.8.0
 )
 

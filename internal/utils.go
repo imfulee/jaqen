@@ -30,3 +30,22 @@ func ReadConfig(filePath string) (JaqenConfig, error) {
 
 	return config, nil
 }
+
+func WriteConfig(config JaqenConfig, filePath string) error {
+	bytes, err := toml.Marshal(config)
+	if err != nil {
+		return err
+	}
+
+	file, err := os.Create(filePath)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	if _, err := file.Write(bytes); err != nil {
+		return err
+	}
+
+	return nil
+}

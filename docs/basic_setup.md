@@ -12,7 +12,7 @@
 
 **Download the New GAN face pack and place it in the graphics directory.** The latest facepack could be found at the original [NewGAN-Manager release page](https://github.com/Maradonna90/NewGAN-Manager/releases) and would be under `Facepack Download`. I recommend renaming it as newgen.
 
-![facepack-download-img](docs/img/facepack-download.png)
+![facepack-download-img](/docs/img/facepack-download.png)
 
 **Extract the file**, it should have subdirectories titled: `EECA`, `MESA` etc... Like this
 

@@ -31,6 +31,12 @@ jaqen \
     --config=/path/to/config
 ```
 
+To format the config toml file
+
+```bash
+jaqen format /path/to/jaqen.toml
+```
+
 
 ## Future Wants
 

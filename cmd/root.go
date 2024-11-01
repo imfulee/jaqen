@@ -27,7 +27,7 @@ const (
 	flagkeys_xml       = "xml"
 	flagkeys_rtf       = "rtf"
 	flagkeys_img       = "img"
-	flagkeys_fmversion = "ver"
+	flagkeys_fmversion = "version"
 	flagkeys_config    = "config"
 )
 
@@ -146,10 +146,10 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.Flags().BoolVarP(&preserve, flagkeys_preserve, "p", false, "Preserve previous settings")
-	rootCmd.Flags().StringVar(&xmlPath, flagkeys_xml, "./config.xml", "Specify XML file path")
-	rootCmd.Flags().StringVar(&rtfPath, flagkeys_rtf, "./newgen.rtf", "Specify RTF file path")
-	rootCmd.Flags().StringVar(&imgDir, flagkeys_img, "./", "Specify the image directory path")
-	rootCmd.Flags().StringVar(&fmVersion, flagkeys_fmversion, "2024", "Specify the football manager version")
-	rootCmd.Flags().StringVar(&configPath, flagkeys_config, "./jaqen.json", "Specify the config file path")
+	rootCmd.Flags().BoolVarP(&preserve, flagkeys_preserve, "p", internal.DefaultPreserve, "Preserve previous settings")
+	rootCmd.Flags().StringVarP(&xmlPath, flagkeys_xml, "x", internal.DefaultXMLPath, "Specify XML file path")
+	rootCmd.Flags().StringVarP(&rtfPath, flagkeys_rtf, "r", internal.DefaultRTFPath, "Specify RTF file path")
+	rootCmd.Flags().StringVarP(&imgDir, flagkeys_img, "i", internal.DefaultImagesPath, "Specify the image directory path")
+	rootCmd.Flags().StringVarP(&fmVersion, flagkeys_fmversion, "v", internal.DefaultFMVersion, "Specify the football manager version")
+	rootCmd.Flags().StringVarP(&configPath, flagkeys_config, "c", internal.DefaultConfigPath, "Specify the config file path")
 }

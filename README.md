@@ -4,7 +4,7 @@ Create and manage your image file mapping to face profiles in Football Manager. 
 
 ## Motivation
 
-I found the original didn't run well on Linux, but works pretty well for Windows and Mac. **You could just hook up a Virtual Machine and a volume and use the original inside the Virtual Machine** but I decided to write this fun side project. I chose Go because I could compile to multiple platforms with a relatively easy learning curve and didn't have a complicated packaging step. I don't play this game as much anymore and you're very welcomed to submit PRs and issues but I don't guarantee to fix/review it.
+I found the original didn't run well on Linux, but works pretty well for Windows and Mac. **You could just hook up a Virtual Machine and a volume and use the original inside the Virtual Machine**, like [this](https://youtu.be/MV-iB1v_UdU) (credits to the reddit `u/EvensenFM` that did it), but I decided to write this fun side project. I chose Go because I could compile to multiple platforms with a relatively easy learning curve and didn't have a complicated packaging step. I don't play this game as much anymore and you're very welcomed to submit PRs and issues.
 
 ## Usage
 
@@ -83,6 +83,6 @@ These are the current code for faces
 
 This is just some notes on what I want it to do in the future.
 
-- Build a GUI, maybe with Go Wails?
+- Build a GUI, maybe with Go Wails? But if you already play a spreadsheet game I assume you would also know how to read some instructions :p
 - There are some performance left on the table, currently the way reading and writing to file works relatively slow compared to what a buffered read and a generator could do. Probably faster than Python though :p
 - Remove the need to copy the `config.xml` file into the directory

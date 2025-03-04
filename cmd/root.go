@@ -14,12 +14,13 @@ import (
 )
 
 var (
-	preserve   bool
-	xmlPath    string
-	rtfPath    string
-	imgDir     string
-	fmVersion  string
-	configPath string
+	preserve       bool
+	xmlPath        string
+	rtfPath        string
+	imgDir         string
+	fmVersion      string
+	configPath     string
+	allowDuplicate bool
 )
 
 const (
@@ -29,6 +30,7 @@ const (
 	flagkeys_img       = "img"
 	flagkeys_fmversion = "version"
 	flagkeys_config    = "config"
+	flagkeys_duplicate = "allow_duplicate"
 )
 
 func mapFaces(cmd *cobra.Command, _ []string) {
@@ -56,6 +58,9 @@ func mapFaces(cmd *cobra.Command, _ []string) {
 		if !cmd.Flags().Changed(flagkeys_fmversion) && configFromFile.FMVersion != nil {
 			fmVersion = *configFromFile.FMVersion
 		}
+		if !cmd.Flags().Changed(flagkeys_duplicate) && configFromFile.AllowDuplicate != nil {
+			allowDuplicate = *configFromFile.AllowDuplicate
+		}
 
 		err = mapper.OverrideNationEthnicMapping(*configFromFile.MappingOverride)
 		if err != nil {
@@ -80,9 +85,15 @@ func mapFaces(cmd *cobra.Command, _ []string) {
 		log.Fatalln(err)
 	}
 
-	imagePool, err := mapper.NewImagePool(imgDir, mapping.AssignedImages())
+	imagePool, err := mapper.NewImagePool(imgDir)
 	if err != nil {
 		log.Fatalln(err)
+	}
+
+	if !allowDuplicate {
+		if err := imagePool.ExcludeImages(mapping.AssignedImages()); err != nil {
+			log.Fatalln(err)
+		}
 	}
 
 	players, err := mapper.GetPlayers(rtfPath)
@@ -114,7 +125,7 @@ func mapFaces(cmd *cobra.Command, _ []string) {
 			continue
 		}
 
-		imgFilename, err := imagePool.Random(player.Ethnic)
+		imgFilename, err := imagePool.GetRandomImagePath(player.Ethnic, !allowDuplicate)
 		if err != nil {
 			log.Fatalln(err)
 		}
@@ -152,4 +163,5 @@ func init() {
 	rootCmd.Flags().StringVarP(&imgDir, flagkeys_img, "i", internal.DefaultImagesPath, "Specify the image directory path")
 	rootCmd.Flags().StringVarP(&fmVersion, flagkeys_fmversion, "v", internal.DefaultFMVersion, "Specify the football manager version")
 	rootCmd.Flags().StringVarP(&configPath, flagkeys_config, "c", internal.DefaultConfigPath, "Specify the config file path")
+	rootCmd.Flags().BoolVarP(&allowDuplicate, flagkeys_duplicate, "d", internal.DefaultAllowDuplicate, "Allow duplicate images")
 }

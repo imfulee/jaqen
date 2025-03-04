@@ -17,7 +17,8 @@ These are the flags that you could use to specify the paths for various files if
 - `--img` specifies the image root directory. Defaults to `./`
 - `--preserve` preserves the current xml mapping. Defaults to not preserve.
 - `--version` could specify the football manager version. Defaults to `2024`, all other values will be ignored.
-- `-config` specifies the config directory. Defaults to `./jaqen.toml`
+- `--config` specifies the config directory. Defaults to `./jaqen.toml`
+- `--allow_duplicate` allows images to be assigned to multiple people
 
 All paths are relative to the binary.
 
@@ -28,7 +29,8 @@ jaqen \
     --img=/path/to/images/directory \
     --preserve \ 
     --version=2024 \ 
-    --config=/path/to/config
+    --config=/path/to/config \
+    --allow_duplicate
 ```
 
 To format the config toml file
@@ -86,3 +88,4 @@ This is just some notes on what I want it to do in the future.
 - Build a GUI, maybe with Go Wails? But if you already play a spreadsheet game I assume you would also know how to read some instructions :p
 - There are some performance left on the table, currently the way reading and writing to file works relatively slow compared to what a buffered read and a generator could do. Probably faster than Python though :p
 - Remove the need to copy the `config.xml` file into the directory
+- Write some god damn tests

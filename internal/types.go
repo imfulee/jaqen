@@ -6,5 +6,6 @@ type JaqenConfig struct {
 	RTFPath         *string            `field:"rtf_path" toml:"rtf_path"`
 	IMGPath         *string            `field:"img_path" toml:"img_path"`
 	FMVersion       *string            `field:"fm_version" toml:"fm_version"`
+	AllowDuplicate  *bool              `field:"allow_duplicate" toml:"allow_duplicate"`
 	MappingOverride *map[string]string `field:"mapping_override" toml:"mapping_override"`
 }

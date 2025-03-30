@@ -1,5 +1,5 @@
 preserve = true
-allowDuplicate = true
+allow_duplicate = true
 xml_path = '/path/to/xml_file'
 rtf_path = '/path/to/rtf_file'
 img_path = '/path/to/game/img/directory'

@@ -181,7 +181,6 @@ func TestGetPlayers_Success(t *testing.T) {
 	}
 	tmpFile.Close()
 
-	// Force fileOpener to use the real os.Open (or you could override it if needed).
 	fileOpener = os.Open
 	players, err := GetPlayers(tmpFile.Name())
 	if err != nil {
@@ -191,7 +190,6 @@ func TestGetPlayers_Success(t *testing.T) {
 		t.Errorf("expected 2 players, got %d", len(players))
 	}
 
-	// Validate one of the players.
 	if players[0].ID != "2000133469" {
 		t.Errorf("expected player id 2000133469, got %s", players[0].ID)
 	}
@@ -208,7 +206,6 @@ func TestGetEthnic_UnknownNationality(t *testing.T) {
 	}
 }
 
-// Test GetPlayers when getEthnic produces an error (e.g. unknown nationality).
 func TestGetPlayers_GetEthnicError(t *testing.T) {
 	// In this test the first nationality is unknown.
 	content := `| UID       | Nat       | 2nd Nat   | Name                       |           |           |           | 
@@ -234,8 +231,6 @@ func TestGetPlayers_GetEthnicError(t *testing.T) {
 		t.Errorf("expected error containing 'ethnic not found', got %v", err)
 	}
 }
-
-//  **  //
 
 // Test GetPlayers with a badly formatted line with too few fields.
 func TestGetPlayers_BadFormat(t *testing.T) {
@@ -305,7 +300,6 @@ func TestGetPlayers_InvalidEthnicValue(t *testing.T) {
 	if err == nil {
 		t.Fatal("expected error due to invalid ethnic value, got nil")
 	}
-	// The error will be produced by strconv.Atoi.
 	if !strings.Contains(err.Error(), "invalid syntax") {
 		t.Errorf("expected error containing 'invalid syntax', got %v", err)
 	}
@@ -329,7 +323,6 @@ func TestGetPlayers_ScannerError(t *testing.T) {
 	if err == nil {
 		t.Fatal("expected error from scanner, got nil")
 	}
-	// When reading from a closed file, the error message may vary; adjust your expectation.
 	if !strings.Contains(err.Error(), "file already closed") && !strings.Contains(err.Error(), "bad file descriptor") {
 		t.Errorf("expected error indicating closed file, got %v", err)
 	}

@@ -141,6 +141,7 @@ func (m *Mapping) Write(xmlPath string) error {
 	if err != nil {
 		return err
 	}
+	defer xmlFile.Close()
 
 	if _, err := xmlFile.Write(rtnXML); err != nil {
 		return fmt.Errorf("failed to write XML content: %w", err)

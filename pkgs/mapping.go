@@ -36,10 +36,10 @@ type Mapping struct {
 var openFileFunc = func(name string) (io.ReadCloser, error) {
 	return os.Open(name)
 }
-var fileCreatorFunc = func(name string) (io.WriteCloser, error) {
+var createFileFunc = func(name string) (io.WriteCloser, error) {
 	return os.Create(name)
 }
-var xmlMarshalIndentFunc = xml.MarshalIndent
+var marshalXMLIndentFunc = xml.MarshalIndent
 
 func convertToPathToPlayerID(toPath string, fmVersion string) PlayerID {
 	var idRegex *regexp.Regexp
@@ -132,12 +132,12 @@ func (m *Mapping) Save() error {
 }
 
 func (m *Mapping) Write(xmlPath string) error {
-	rtnXML, err := xmlMarshalIndentFunc(m.instance, "", "\t")
+	rtnXML, err := marshalXMLIndentFunc(m.instance, "", "\t")
 	if err != nil {
 		return err
 	}
 
-	xmlFile, err := fileCreatorFunc(xmlPath)
+	xmlFile, err := createFileFunc(xmlPath)
 	if err != nil {
 		return err
 	}

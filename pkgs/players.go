@@ -111,9 +111,9 @@ func GetPlayers(rtfPath string) ([]Player, error) {
 				rtfData[rtfDataIndex] = strings.Trim(rtfData[rtfDataIndex], " ")
 			}
 
-			ethnicValue, ethniceValueErr := strconv.Atoi(rtfData[7])
-			if ethniceValueErr != nil {
-				return nil, ethniceValueErr
+			ethnicValue, ethnicValueErr := strconv.Atoi(rtfData[7])
+			if ethnicValueErr != nil {
+				return nil, ethnicValueErr
 			}
 
 			nationality1 := rtfData[2]

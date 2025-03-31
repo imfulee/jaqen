@@ -17,11 +17,11 @@ func OverrideNationEthnicMapping(overrides map[string]string) error {
 	overrideErrors := []error{}
 
 	for nation, ethnic := range overrides {
-		if IsValidEthnic(ethnic) {
-			overrideErrors = append(overrideErrors, fmt.Errorf(`ethnic value "%s" is not valid ethnic`, ethnic))
+		if !IsValidEthnic(ethnic) {
+			overrideErrors = append(overrideErrors, fmt.Errorf(`ethnic value "%s" is not valid ethnic for "%s"`, ethnic, nation))
+		} else {
+			NationEthnicMapping[nation] = Ethnic(ethnic)
 		}
-
-		NationEthnicMapping[nation] = Ethnic(ethnic)
 	}
 
 	if len(overrideErrors) > 0 {

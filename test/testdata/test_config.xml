@@ -1,0 +1,6 @@
+<record>
+	<boolean id="preload" value="false"/>
+	<boolean id="amap" value="false"/>
+	<list id="maps">
+	</list>
+</record>

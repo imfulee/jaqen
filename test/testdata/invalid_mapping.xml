@@ -1,0 +1,8 @@
+<record>
+    <boolean id="preload" value="false"/>
+    <boolean id="amap" value="false"/>
+    <list id="foo">
+        <record from="image1.jpg" to="/path/r-12345/extra"/>
+        <record from="image2.jpg" to="/anotherPath/r-67890/more"/>
+    </list>
+</r>

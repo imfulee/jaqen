@@ -1,0 +1,11 @@
+# valid_config.toml
+preserve = true
+xml_path = "config.xml"
+rtf_path = "newgen.rtf"
+img_path = "images"
+fm_version = "2024"
+allow_duplicate = false
+
+[mapping_override]
+USA = "African"
+IND = "Caucasian"

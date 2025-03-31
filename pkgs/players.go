@@ -12,6 +12,9 @@ import (
 
 var ErrBadRTFFormat string = "bad RTF Format:\n%w"
 
+// change fileOpener to allow overriding in tests
+var fileOpener = os.Open
+
 func getEthnic(nationality1, nationality2 string, ethnicValue int) (Ethnic, error) {
 	ethnic1, ok := NationEthnicMapping[nationality1]
 	if !ok {
@@ -48,7 +51,7 @@ func getEthnic(nationality1, nationality2 string, ethnicValue int) (Ethnic, erro
 		if ethnic1 != "" {
 			return ethnic1, nil
 		}
-		return ethnic2, nil
+		return ethnic2, nil // not sure how to test. guarded by statement above and ethnic not found for country error
 	case 2:
 		if hasEthnic(MiddleEastSouthAsian) {
 			return MiddleEastSouthAsian, nil
@@ -81,7 +84,7 @@ func getEthnic(nationality1, nationality2 string, ethnicValue int) (Ethnic, erro
 func GetPlayers(rtfPath string) ([]Player, error) {
 	players := make([]Player, 0)
 
-	rtfFile, rtfErr := os.Open(rtfPath)
+	rtfFile, rtfErr := fileOpener(rtfPath)
 	if rtfErr != nil {
 		return nil, rtfErr
 	}
@@ -108,9 +111,9 @@ func GetPlayers(rtfPath string) ([]Player, error) {
 				rtfData[rtfDataIndex] = strings.Trim(rtfData[rtfDataIndex], " ")
 			}
 
-			ethnicValue, ethniceValueErr := strconv.Atoi(rtfData[7])
-			if ethniceValueErr != nil {
-				return nil, ethniceValueErr
+			ethnicValue, ethnicValueErr := strconv.Atoi(rtfData[7])
+			if ethnicValueErr != nil {
+				return nil, ethnicValueErr
 			}
 
 			nationality1 := rtfData[2]

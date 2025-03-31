@@ -14,7 +14,7 @@ import (
 func TestExistSuccessfully(t *testing.T) {
 	t.Run("ID exists", func(t *testing.T) {
 		id := PlayerID("123")
-		mapping, err := NewMapping("../testdata/test_config.xml", "2024")
+		mapping, err := NewMapping("../test/testdata/test_config.xml", "2024")
 		if err != nil {
 			t.Fatalf("Failed to create mapping: %v", err)
 		}
@@ -28,7 +28,7 @@ func TestExistSuccessfully(t *testing.T) {
 
 	t.Run("ID does not exist", func(t *testing.T) {
 		id := PlayerID("456")
-		mapping, err := NewMapping("../testdata/test_config.xml", "2024")
+		mapping, err := NewMapping("../test/testdata/test_config.xml", "2024")
 		if err != nil {
 			t.Fatalf("Failed to create mapping: %v", err)
 		}
@@ -43,7 +43,7 @@ func TestExistSuccessfully(t *testing.T) {
 func TestMapToImageSuccessfully(t *testing.T) {
 	t.Run("Correct ID format for 2024", func(t *testing.T) {
 		id := PlayerID("r-123")
-		mapping, err := NewMapping("../testdata/test_config.xml", "2024")
+		mapping, err := NewMapping("../test/testdata/test_config.xml", "2024")
 		if err != nil {
 			t.Fatalf("Failed to create mapping: %v", err)
 		}
@@ -57,7 +57,7 @@ func TestMapToImageSuccessfully(t *testing.T) {
 
 	t.Run("Correct ID format for default version", func(t *testing.T) {
 		id := PlayerID("456")
-		mapping, err := NewMapping("../testdata/test_config.xml", "2024")
+		mapping, err := NewMapping("../test/testdata/test_config.xml", "2024")
 		if err != nil {
 			t.Fatalf("Failed to create mapping: %v", err)
 		}
@@ -72,7 +72,7 @@ func TestMapToImageSuccessfully(t *testing.T) {
 
 func TestAssignedImagesSuccessfully(t *testing.T) {
 	id := PlayerID("789")
-	mapping, err := NewMapping("../testdata/test_config.xml", "2024")
+	mapping, err := NewMapping("../test/testdata/test_config.xml", "2024")
 	if err != nil {
 		t.Fatalf("Failed to create mapping: %v", err)
 	}
@@ -90,7 +90,7 @@ func TestAssignedImagesSuccessfully(t *testing.T) {
 
 func TestSaveSuccessfully2024(t *testing.T) {
 	id := PlayerID("123")
-	mapping, err := NewMapping("../testdata/test_config.xml", "2024")
+	mapping, err := NewMapping("../test/testdata/test_config.xml", "2024")
 	if err != nil {
 		t.Fatalf("Failed to create mapping: %v", err)
 	}
@@ -113,7 +113,7 @@ func TestSaveSuccessfully2024(t *testing.T) {
 
 func TestSaveSuccessfullyDefault(t *testing.T) {
 	id := PlayerID("123")
-	mapping, err := NewMapping("../testdata/test_config.xml", "2023")
+	mapping, err := NewMapping("../test/testdata/test_config.xml", "2023")
 	if err != nil {
 		t.Fatalf("Failed to create mapping: %v", err)
 	}
@@ -212,7 +212,7 @@ func TestNewMapping_Success(t *testing.T) {
 }
 
 func TestNewMapping_XML_FileOpenError(t *testing.T) {
-	xmlFilePath := "../testdata/cannot_open_mapping.xml"
+	xmlFilePath := "../test/testdata/cannot_open_mapping.xml"
 
 	fmVersion := "2024"
 	_, err := NewMapping(xmlFilePath, fmVersion)
@@ -264,7 +264,7 @@ func TestReadXML_ReadAllError(t *testing.T) {
 }
 
 func TestNewMapping_InvalidXML(t *testing.T) {
-	xmlFilePath := "../testdata/invalid_mapping.xml"
+	xmlFilePath := "../test/testdata/invalid_mapping.xml"
 
 	_, err := NewMapping(xmlFilePath, "2024")
 	if err == nil {
@@ -273,32 +273,6 @@ func TestNewMapping_InvalidXML(t *testing.T) {
 	if err.Error() != "cannot unmarshall xml file\nXML syntax error on line 8: element <record> closed by </r>" {
 		t.Fatalf("unexpected error: %v", err)
 	}
-}
-
-// TODO: Fix this test
-func TestWriteSuccessfully(t *testing.T) {
-
-	//mapping, err := NewMapping("../testdata/test_config.xml", "2024")
-	//if err != nil {
-	//	t.Fatalf("Failed to create mapping: %v", err)
-	//}
-	//mapping.MapToImage(PlayerID("123"), "../testdata/test.png")
-	//filename := "../testdata/test_output.xml"
-	//err = mapping.Write(filename)
-	//if err != nil {
-	//	t.Fatalf("Failed to write mapping: %v", err)
-	//}
-	//fileContent, err := os.ReadFile(filename)
-	//if err != nil {
-	//	t.Fatalf("Failed to read file: %v", err)
-	//}
-	//contentStr := string(fileContent)
-	//t.Log("TODO: Fix this test")
-	//t.Logf("File content:\n%s", contentStr)
-	//if !strings.Contains(contentStr, "test.png") {
-	//	t.Errorf("File content does not contain expected 'test.png'.\nGot: %s", contentStr)
-	//}
-	//os.Remove(filename)
 }
 
 func TestSaveWithNilInstance(t *testing.T) {
@@ -315,7 +289,7 @@ func TestWrite_FileCreateError(t *testing.T) {
 	defer func() { createFileFunc = origCreator }()
 
 	// Create a Mapping instance with some data
-	mapping, err := NewMapping("../testdata/test_config.xml", "2024")
+	mapping, err := NewMapping("../test/testdata/test_config.xml", "2024")
 	if err != nil {
 		t.Fatalf("Failed to create mapping: %v", err)
 	}
@@ -337,7 +311,7 @@ func TestWrite_FileCreateError(t *testing.T) {
 
 func TestWrite_MarshalIndentError(t *testing.T) {
 	// Create a Mapping instance with some data
-	mapping, err := NewMapping("../testdata/test_config.xml", "2024")
+	mapping, err := NewMapping("../test/testdata/test_config.xml", "2024")
 	if err != nil {
 		t.Fatalf("Failed to create mapping: %v", err)
 	}
@@ -372,7 +346,7 @@ func (f *fakeWriteErrorFile) Close() error {
 
 func TestWrite_WriteError(t *testing.T) {
 	// Create a Mapping instance with some data
-	mapping, err := NewMapping("../testdata/test_config.xml", "2024")
+	mapping, err := NewMapping("../test/testdata/test_config.xml", "2024")
 	if err != nil {
 		t.Fatalf("Failed to create mapping: %v", err)
 	}
@@ -439,7 +413,7 @@ func TestWrite_Success(t *testing.T) {
 	defer os.Remove(tmpFile)
 
 	// Create a Mapping instance with some data
-	mapping, err := NewMapping("../testdata/test_config.xml", "2024")
+	mapping, err := NewMapping("../test/testdata/test_config.xml", "2024")
 	if err != nil {
 		t.Fatalf("Failed to create mapping: %v", err)
 	}

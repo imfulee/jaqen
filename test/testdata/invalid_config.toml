@@ -1,0 +1,11 @@
+# invalid_config.toml
+preserve = 
+xml_path = 
+rtf_path = 
+img_path = 
+fm_version = 
+allow_duplicate = 
+
+[mapping_override]
+USA = 
+IND = 

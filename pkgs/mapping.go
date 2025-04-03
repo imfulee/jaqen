@@ -35,7 +35,7 @@ type Mapping struct {
 func convertToPathToPlayerID(toPath string, fmVersion string) PlayerID {
 	var idRegex *regexp.Regexp
 	switch fmVersion {
-	case "2024":
+	case FMVersion2024:
 		idRegex = regexp.MustCompile(`r-\d+`)
 	default:
 		idRegex = regexp.MustCompile(`\d+`)
@@ -44,7 +44,7 @@ func convertToPathToPlayerID(toPath string, fmVersion string) PlayerID {
 	playerID := PlayerID(idRegex.Find([]byte(toPath)))
 
 	switch fmVersion {
-	case "2024":
+	case FMVersion2024:
 		playerID = PlayerID(strings.TrimPrefix(string(playerID), "r-"))
 	default:
 	}
@@ -110,7 +110,7 @@ func (m *Mapping) Save() error {
 	for id, filename := range m.idImageMap {
 		var playerID PlayerID
 		switch m.fmVersion {
-		case "2024":
+		case FMVersion2024:
 			playerID = PlayerID(fmt.Sprintf("r-%s", id))
 		default:
 			playerID = id

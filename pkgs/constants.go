@@ -284,6 +284,22 @@ var NationEthnicMapping = map[string]Ethnic{
 	"ZIM": African,
 }
 
+const (
+	FMVersion2020 = "2020"
+	FMVersion2021 = "2021"
+	FMVersion2022 = "2022"
+	FMVersion2023 = "2023"
+	FMVersion2024 = "2024"
+)
+
+var FMVersions = []string{
+	FMVersion2020,
+	FMVersion2021,
+	FMVersion2022,
+	FMVersion2023,
+	FMVersion2024,
+}
+
 func init() {
 	for _, ethnic := range Ethnicities {
 		EthnicSet.Add(ethnic)

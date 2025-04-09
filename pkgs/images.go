@@ -13,6 +13,8 @@ import (
 	mapset "github.com/deckarep/golang-set/v2"
 )
 
+var randIntnFunc = rand.Intn
+
 type ImagePool struct {
 	pool map[Ethnic][]FilePath // ex: asian => [relative/path/to/image]
 }
@@ -20,6 +22,7 @@ type ImagePool struct {
 func NewImagePool(imageRootPath string) (*ImagePool, error) {
 	pool := make(map[Ethnic][]FilePath)
 
+	//TODO To make more flexible in testing, override the Ethnicities rather than reference constants?
 	for _, ethnic := range Ethnicities {
 		pool[ethnic] = make([]FilePath, 0)
 
@@ -97,7 +100,7 @@ func (images *ImagePool) GetRandomImagePath(ethnic Ethnic, removeFromPool bool) 
 	} else if length == 1 {
 		index = 0
 	} else {
-		index = rand.Intn(length - 1)
+		index = randIntnFunc(length - 1)
 	}
 
 	filename := images.pool[ethnic][index]

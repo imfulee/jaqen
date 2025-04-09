@@ -32,6 +32,15 @@ type Mapping struct {
 	fmVersion  string
 }
 
+// To allow overriding in testing
+var openFileFunc = func(name string) (io.ReadCloser, error) {
+	return os.Open(name)
+}
+var createFileFunc = func(name string) (io.WriteCloser, error) {
+	return os.Create(name)
+}
+var marshalXMLIndentFunc = xml.MarshalIndent
+
 func convertToPathToPlayerID(toPath string, fmVersion string) PlayerID {
 	var idRegex *regexp.Regexp
 	switch fmVersion {
@@ -63,7 +72,7 @@ func NewMapping(xmlPath string, fmVersion string) (*Mapping, error) {
 		fmVersion:  fmVersion,
 	}
 
-	xmlFile, err := os.Open(xmlPath)
+	xmlFile, err := openFileFunc(xmlPath)
 	if err != nil {
 		return nil, errors.Join(errors.New("cannot open xml file"), err)
 	}
@@ -123,18 +132,19 @@ func (m *Mapping) Save() error {
 }
 
 func (m *Mapping) Write(xmlPath string) error {
-	rtnXML, err := xml.MarshalIndent(m.instance, "", "\t")
+	rtnXML, err := marshalXMLIndentFunc(m.instance, "", "\t")
 	if err != nil {
 		return err
 	}
 
-	xmlFile, err := os.Create(xmlPath)
+	xmlFile, err := createFileFunc(xmlPath)
 	if err != nil {
 		return err
 	}
+	defer xmlFile.Close()
 
 	if _, err := xmlFile.Write(rtnXML); err != nil {
-		return err
+		return fmt.Errorf("failed to write XML content: %w", err)
 	}
 
 	return nil

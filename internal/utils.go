@@ -8,6 +8,17 @@ import (
 	"github.com/pelletier/go-toml/v2"
 )
 
+func ParseConfig(configBytes []byte) (JaqenConfig, error) {
+	var config JaqenConfig
+
+	err := toml.Unmarshal(configBytes, &config)
+	if err != nil {
+		return config, err
+	}
+
+	return config, nil
+}
+
 func ReadConfig(filePath string) (JaqenConfig, error) {
 	var config JaqenConfig
 
@@ -19,31 +30,39 @@ func ReadConfig(filePath string) (JaqenConfig, error) {
 	if err != nil {
 		return config, err
 	}
+
 	bytes, err := io.ReadAll(file)
 	if err != nil {
 		return config, err
 	}
-	err = toml.Unmarshal(bytes, &config)
+
+	config, err = ParseConfig(bytes)
+
+	return config, err
+}
+
+func MarshalConfig(config JaqenConfig) ([]byte, error) {
+	bytes, err := toml.Marshal(config)
 	if err != nil {
-		return config, err
+		return []byte{}, err
 	}
 
-	return config, nil
+	return bytes, err
 }
 
 func WriteConfig(config JaqenConfig, filePath string) error {
-	bytes, err := toml.Marshal(config)
-	if err != nil {
-		return err
-	}
-
 	file, err := os.Create(filePath)
 	if err != nil {
 		return err
 	}
 	defer file.Close()
 
-	if _, err := file.Write(bytes); err != nil {
+	marshalledConfig, err := MarshalConfig(config)
+	if err != nil {
+		return err
+	}
+
+	if _, err := file.Write(marshalledConfig); err != nil {
 		return err
 	}
 

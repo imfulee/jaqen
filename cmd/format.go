@@ -40,7 +40,9 @@ func formatConfig(cmd *cobra.Command, args []string) {
 		*config.MappingOverride = mappingOverride
 	}
 
-	internal.WriteConfig(config, configPath)
+	if err = internal.WriteConfig(config, configPath); err != nil {
+		log.Fatalln(err)
+	}
 }
 
 var formatCmd = &cobra.Command{

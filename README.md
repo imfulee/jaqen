@@ -1,4 +1,10 @@
-<h1 align="center">Jaqen</h1>
+<div align="center"><pre>
+        _____   ____    _______   __
+       / /   | / __ \  / ____/ | / /
+  __  / / /| |/ / / / / __/ /  |/ /
+ / /_/ / ___ / /_/ / / /___/ /|  /  
+ \____/_/  |_\___\_\/_____/_/ |_/
+</pre></div>
 
 Create and manage your image file mapping to face profiles in Football Manager. Inspired by [NewGAN-Manager](https://github.com/Maradonna90/NewGAN-Manager), I named it Jaqen based on Jaqen H'ghar having a wall of faces.
 
@@ -22,7 +28,7 @@ These are the flags that you could use to specify the paths for various files if
 
 All paths are relative to the binary.
 
-```bash 
+```bash
 jaqen \
     --xml=/path/to/config.xml \
     --rtf=/path/to/newgan.rtf \ 
@@ -39,16 +45,16 @@ To format the config toml file
 jaqen format /path/to/jaqen.toml
 ```
 
-### Config file options 
+### Config file options
 
-It's basically the command line flags but in a file. You could see an example [here](./example/jaqen.toml). Flags will take precendents over config file options, which itself will take precendents over the defaults. The only difference is the `[mapping_override]` section, it will look something like this: 
+It's basically the command line flags but in a file. You could see an example [here](./example/jaqen.toml). Flags will take precendents over config file options, which itself will take precendents over the defaults. The only difference is the `[mapping_override]` section, it will look something like this:
 
 ```toml
 [mapping_override]
 AFG = 'MESA'
 ```
 
-The first word "AFG" represents the country initials "Afghanistan", while the second word describes the type of faces that it should use, which in this example is "MESA" (it is a code for middle east south asian). The point of this is to be able to override the default mappings from nations to a certain facepack. For example, if I want to make Afghans look South East Asian, you could change it to 
+The first word "AFG" represents the country initials "Afghanistan", while the second word describes the type of faces that it should use, which in this example is "MESA" (it is a code for middle east south asian). The point of this is to be able to override the default mappings from nations to a certain facepack. For example, if I want to make Afghans look South East Asian, you could change it to
 
 ```toml
 [mapping_override]
@@ -62,7 +68,7 @@ Or if you loaded a database that has a country not listed in the game, you could
 XYZ = 'EECA'
 ```
 
-These are the current code for faces 
+These are the current code for faces
 
 | Ethnic group                |Code for the faces|
 |-----------------------------|------------------|

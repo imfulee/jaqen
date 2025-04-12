@@ -24,13 +24,13 @@ var (
 )
 
 const (
-	flagkeys_preserve  = "preserve"
-	flagkeys_xml       = "xml"
-	flagkeys_rtf       = "rtf"
-	flagkeys_img       = "img"
-	flagkeys_fmversion = "version"
-	flagkeys_config    = "config"
-	flagkeys_duplicate = "allow_duplicate"
+	flagkeysPreserve  = "preserve"
+	flagkeysXml       = "xml"
+	flagkeysRtf       = "rtf"
+	flagkeysImg       = "img"
+	flagkeyFmVersion = "version"
+	flagkeyConfig    = "config"
+	flagkeyDuplicate = "allow_duplicate"
 )
 
 func mapFaces(cmd *cobra.Command, _ []string) {
@@ -40,25 +40,25 @@ func mapFaces(cmd *cobra.Command, _ []string) {
 			log.Fatalln(err)
 		}
 
-		if !cmd.Flags().Changed(flagkeys_preserve) && configFromFile.Preserve != nil {
+		if !cmd.Flags().Changed(flagkeysPreserve) && configFromFile.Preserve != nil {
 			preserve = *configFromFile.Preserve
 		}
-		if !cmd.Flags().Changed(flagkeys_img) && configFromFile.IMGPath != nil {
+		if !cmd.Flags().Changed(flagkeysImg) && configFromFile.IMGPath != nil {
 			imgDir = *configFromFile.IMGPath
 		}
-		if !cmd.Flags().Changed(flagkeys_img) && configFromFile.IMGPath != nil {
+		if !cmd.Flags().Changed(flagkeysImg) && configFromFile.IMGPath != nil {
 			imgDir = *configFromFile.IMGPath
 		}
-		if !cmd.Flags().Changed(flagkeys_xml) && configFromFile.XMLPath != nil {
+		if !cmd.Flags().Changed(flagkeysXml) && configFromFile.XMLPath != nil {
 			xmlPath = *configFromFile.XMLPath
 		}
-		if !cmd.Flags().Changed(flagkeys_rtf) && configFromFile.RTFPath != nil {
+		if !cmd.Flags().Changed(flagkeysRtf) && configFromFile.RTFPath != nil {
 			rtfPath = *configFromFile.RTFPath
 		}
-		if !cmd.Flags().Changed(flagkeys_fmversion) && configFromFile.FMVersion != nil {
+		if !cmd.Flags().Changed(flagkeyFmVersion) && configFromFile.FMVersion != nil {
 			fmVersion = *configFromFile.FMVersion
 		}
-		if !cmd.Flags().Changed(flagkeys_duplicate) && configFromFile.AllowDuplicate != nil {
+		if !cmd.Flags().Changed(flagkeyDuplicate) && configFromFile.AllowDuplicate != nil {
 			allowDuplicate = *configFromFile.AllowDuplicate
 		}
 
@@ -157,11 +157,11 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.Flags().BoolVarP(&preserve, flagkeys_preserve, "p", internal.DefaultPreserve, "Preserve previous settings")
-	rootCmd.Flags().StringVarP(&xmlPath, flagkeys_xml, "x", internal.DefaultXMLPath, "Specify XML file path")
-	rootCmd.Flags().StringVarP(&rtfPath, flagkeys_rtf, "r", internal.DefaultRTFPath, "Specify RTF file path")
-	rootCmd.Flags().StringVarP(&imgDir, flagkeys_img, "i", internal.DefaultImagesPath, "Specify the image directory path")
-	rootCmd.Flags().StringVarP(&fmVersion, flagkeys_fmversion, "v", internal.DefaultFMVersion, "Specify the football manager version")
-	rootCmd.Flags().StringVarP(&configPath, flagkeys_config, "c", internal.DefaultConfigPath, "Specify the config file path")
-	rootCmd.Flags().BoolVarP(&allowDuplicate, flagkeys_duplicate, "d", internal.DefaultAllowDuplicate, "Allow duplicate images")
+	rootCmd.Flags().BoolVarP(&preserve, flagkeysPreserve, "p", internal.DefaultPreserve, "Preserve previous settings")
+	rootCmd.Flags().StringVarP(&xmlPath, flagkeysXml, "x", internal.DefaultXMLPath, "Specify XML file path")
+	rootCmd.Flags().StringVarP(&rtfPath, flagkeysRtf, "r", internal.DefaultRTFPath, "Specify RTF file path")
+	rootCmd.Flags().StringVarP(&imgDir, flagkeysImg, "i", internal.DefaultImagesPath, "Specify the image directory path")
+	rootCmd.Flags().StringVarP(&fmVersion, flagkeyFmVersion, "v", internal.DefaultFMVersion, "Specify the football manager version")
+	rootCmd.Flags().StringVarP(&configPath, flagkeyConfig, "c", internal.DefaultConfigPath, "Specify the config file path")
+	rootCmd.Flags().BoolVarP(&allowDuplicate, flagkeyDuplicate, "d", internal.DefaultAllowDuplicate, "Allow duplicate images")
 }

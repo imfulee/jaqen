@@ -24,48 +24,58 @@ var (
 )
 
 const (
-	flagkeysPreserve  = "preserve"
-	flagkeysXml       = "xml"
-	flagkeysRtf       = "rtf"
-	flagkeysImg       = "img"
+	flagkeysPreserve = "preserve"
+	flagkeysXml      = "xml"
+	flagkeysRtf      = "rtf"
+	flagkeysImg      = "img"
 	flagkeyFmVersion = "version"
 	flagkeyConfig    = "config"
 	flagkeyDuplicate = "allow_duplicate"
 )
 
+func handleConfigFile(configPath string, cmd *cobra.Command) error {
+	if _, err := os.Stat(configPath); err != nil {
+		return nil
+	}
+
+	configFromFile, err := internal.ReadConfig(configPath)
+	if err != nil {
+		return err
+	}
+
+	if !cmd.Flags().Changed(flagkeysPreserve) && configFromFile.Preserve != nil {
+		preserve = *configFromFile.Preserve
+	}
+	if !cmd.Flags().Changed(flagkeysImg) && configFromFile.IMGPath != nil {
+		imgDir = *configFromFile.IMGPath
+	}
+	if !cmd.Flags().Changed(flagkeysImg) && configFromFile.IMGPath != nil {
+		imgDir = *configFromFile.IMGPath
+	}
+	if !cmd.Flags().Changed(flagkeysXml) && configFromFile.XMLPath != nil {
+		xmlPath = *configFromFile.XMLPath
+	}
+	if !cmd.Flags().Changed(flagkeysRtf) && configFromFile.RTFPath != nil {
+		rtfPath = *configFromFile.RTFPath
+	}
+	if !cmd.Flags().Changed(flagkeyFmVersion) && configFromFile.FMVersion != nil {
+		fmVersion = *configFromFile.FMVersion
+	}
+	if !cmd.Flags().Changed(flagkeyDuplicate) && configFromFile.AllowDuplicate != nil {
+		allowDuplicate = *configFromFile.AllowDuplicate
+	}
+
+	err = mapper.OverrideNationEthnicMapping(*configFromFile.MappingOverride)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func mapFaces(cmd *cobra.Command, _ []string) {
-	if _, err := os.Stat(configPath); err == nil {
-		configFromFile, err := internal.ReadConfig(configPath)
-		if err != nil {
-			log.Fatalln(err)
-		}
-
-		if !cmd.Flags().Changed(flagkeysPreserve) && configFromFile.Preserve != nil {
-			preserve = *configFromFile.Preserve
-		}
-		if !cmd.Flags().Changed(flagkeysImg) && configFromFile.IMGPath != nil {
-			imgDir = *configFromFile.IMGPath
-		}
-		if !cmd.Flags().Changed(flagkeysImg) && configFromFile.IMGPath != nil {
-			imgDir = *configFromFile.IMGPath
-		}
-		if !cmd.Flags().Changed(flagkeysXml) && configFromFile.XMLPath != nil {
-			xmlPath = *configFromFile.XMLPath
-		}
-		if !cmd.Flags().Changed(flagkeysRtf) && configFromFile.RTFPath != nil {
-			rtfPath = *configFromFile.RTFPath
-		}
-		if !cmd.Flags().Changed(flagkeyFmVersion) && configFromFile.FMVersion != nil {
-			fmVersion = *configFromFile.FMVersion
-		}
-		if !cmd.Flags().Changed(flagkeyDuplicate) && configFromFile.AllowDuplicate != nil {
-			allowDuplicate = *configFromFile.AllowDuplicate
-		}
-
-		err = mapper.OverrideNationEthnicMapping(*configFromFile.MappingOverride)
-		if err != nil {
-			log.Fatalln(err)
-		}
+	if err := handleConfigFile(configPath, cmd); err != nil {
+		log.Fatalln(fmt.Errorf("error handling config file: %w", err))
 	}
 
 	if _, err := os.Stat(imgDir); err != nil {

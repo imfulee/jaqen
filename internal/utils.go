@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -67,4 +68,32 @@ func WriteConfig(config JaqenConfig, filePath string) error {
 	}
 
 	return nil
+}
+
+func FindFmPaths() (string, error) {
+	homePath, err := os.UserHomeDir()
+	if err != nil {
+		return "", err
+	}
+
+	fmPath := ""
+
+	for fmVersion, fmSteamId := range SteamAppIdMap {
+		possibleFmPaths := map[string]string{
+			"arch":   fmt.Sprintf("%s/.local/shareSteam/steamapps/compatdata/%s/pfx/drive_c/users/steamuser/Documents/Sports Interactive/Football Manager %s/", homePath, fmSteamId, fmVersion),
+			"debian": fmt.Sprintf("%s/.steam/debian-installation/steamapps/compatdata/%s/pfx/drive_c/users/steamuser/Documents/Sports Interactive/Football Manager %s", homePath, fmSteamId, fmVersion),
+		}
+
+		for _, possibleFmPath := range possibleFmPaths {
+			if _, err := os.Stat(possibleFmPath); err != nil {
+				fmPath = possibleFmPath
+			}
+		}
+	}
+
+	if fmPath == "" {
+		return fmPath, errors.New("could not find steam football manager path")
+	}
+
+	return fmPath, nil
 }

@@ -2,7 +2,19 @@
 
 > replace the CAPITALIZED_SNAKE_CHARACTERS with your own environment
 
-**Locate the directory.** In the linux version of the game, football manager is installed in a directory deep inside the `.local/share/Steam` directory. If you are running football manager 2024, yours should look like this `$HOME/.local/share/Steam/steamapps/compatdata/ID_NUMBER/pfx/drive_c/users/steamuser/Documents/Sports Interactive/Football Manager 2024/`, with the `ID_NUMBER` different for everyone. You would see a directory like this. **You may not have the `graphics` directory.**
+**Locate the directory (directory means folders in Linux).**
+
+In the Linux version of the game, football manager is installed in a directory deep inside the `.local/share/Steam` directory. Yours should look something like this `$HOME/.local/share/Steam/steamapps/compatdata/ID_NUMBER/pfx/drive_c/users/steamuser/Documents/Sports Interactive/Football Manager VERSION/`, with the `ID_NUMBER` different for every version of the game. For example, Football Manager 2024 should be located in `$HOME/.local/share/Steam/steamapps/compatdata/2252570/pfx/drive_c/users/steamuser/Documents/Sports Interactive/Football Manager 2024/`
+
+| Football Manager Version | ID_NUMBER |
+| ------------------------ | --------- |
+| 2024                     | 2252570   |
+| 2023                     | 1904540   |
+| 2022                     | 1569040   |
+| 2021                     | 1263850   |
+| 2020                     | 1100600   |
+
+A way to find the directory/folder of your football manager save is to use [`fzf`](https://github.com/junegunn/fzf) or `grep`. You would see a directory like this. **You may not have the `graphics` directory.**
 
 ![steam-directory](/docs/img/steam-directory.png)
 

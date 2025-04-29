@@ -38,33 +38,14 @@ A way to find the directory/folder of your football manager save is to use [`fzf
 
 ![rtf-file](/docs/img/newgen-rtf.png)
 
-**Download the repository, build the binary and move the binary to your graphics directory**
+**Download the binary and place it into the football manager `graphics` directory**
 
-```bash
-cd REPOSITORY_PATH
-go build .
+![download the binary](/docs/img/download-binary.png)
 
-fm_graphics_dir="$HOME/.local/share/Steam/steamapps/compatdata/ID_NUMBER/pfx/drive_c/users/steamuser/Documents/Sports Interactive/Football Manager FM_VERSION/graphics/newgen"
-install jaqen $fm_graphics_dir
-```
+![place the binary in the right directory](/docs/img/jaqen-binary.png)
 
-**Execute the binary** and check if your `config.xml` has been changed or not
-
-```bash
-fm_graphics_dir="$HOME/.local/share/Steam/steamapps/compatdata/ID_NUMBER/pfx/drive_c/users/steamuser/Documents/Sports Interactive/Football Manager FM_VERSION/graphics/newgen"
-cd $fm_graphics_dir
-./jaqen
-```
+**Execute the binary by double clicking the jaqen binary** and check if your `config.xml` has been changed or not
 
 ![changed-xml](/docs/img/changed-xml.png)
 
-**Reload the skin** and enjoy. Reloading is different on each version of the game but I'm sure there's a lot of guides on the internet and you could see Zealand doing it in his video/streams
-
-If you don't want to run the long command in the future, you could also setup an alias or function for the command in your `.bashrc` or `.zshrc` or whatever you use.
-
-```bash
-newgancli() {
-    fm_graphics_dir=".local/share/Steam/steamapps/compatdata/ID_NUMBER/pfx/drive_c/users/steamuser/Documents/Sports Interactive/Football Manager FM_VERSION/graphics/"
-    $fm_graphics_dir/jaqen
-}
-```
+**Reload the skin** and enjoy. Reloading is different on each version of the game but I'm sure there's a lot of guides on the internet and you could see Zealand doing it in his video/stream. Also it might be best to not enable caching while reloading the images.
